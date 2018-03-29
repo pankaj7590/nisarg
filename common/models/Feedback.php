@@ -3,6 +3,7 @@
 namespace common\models;
 
 use Yii;
+use yii\behaviors\TimestampBehavior;
 
 /**
  * This is the model class for table "feedback".
@@ -39,6 +40,16 @@ class Feedback extends \yii\db\ActiveRecord
             [['feedback_type', 'room_type', 'facility_type', 'status', 'created_at', 'updated_at'], 'integer'],
             [['message'], 'string'],
             [['name', 'surname', 'email'], 'string', 'max' => 255],
+        ];
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function behaviors()
+    {
+        return [
+            TimestampBehavior::className(),
         ];
     }
 

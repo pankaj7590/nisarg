@@ -100,7 +100,7 @@ $baseUrl = Yii::$app->urlManager->baseUrl;
                                     ],
                                     [
                                         "label" => "Rooms",
-                                        "icon" => "door",
+                                        "icon" => "building",
                                         "url" => "#",
                                         "items" => [
                                             ["label" => "Add Room", "url" => ["room/create"]],
@@ -109,7 +109,7 @@ $baseUrl = Yii::$app->urlManager->baseUrl;
                                     ],
                                     [
                                         "label" => "Facilities",
-                                        "icon" => "door",
+                                        "icon" => "life-saver",
                                         "url" => "#",
                                         "items" => [
                                             ["label" => "Add Facility", "url" => ["facility/create"]],
@@ -120,7 +120,7 @@ $baseUrl = Yii::$app->urlManager->baseUrl;
                                     ],
                                     [
                                         "label" => "Memberships",
-                                        "icon" => "door",
+                                        "icon" => "address-card",
                                         "url" => "#",
                                         "items" => [
                                             ["label" => "Manage Memberships", "url" => ["membership-customer/index"]],
@@ -129,7 +129,7 @@ $baseUrl = Yii::$app->urlManager->baseUrl;
                                     ],
                                     [
                                         "label" => "News & Events",
-                                        "icon" => "door",
+                                        "icon" => "calendar",
                                         "url" => "#",
                                         "items" => [
                                             ["label" => "Add News/Event", "url" => ["news-event/create"]],

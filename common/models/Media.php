@@ -3,6 +3,7 @@
 namespace common\models;
 
 use Yii;
+use yii\behaviors\TimestampBehavior;
 
 /**
  * This is the model class for table "media".
@@ -47,6 +48,16 @@ class Media extends \yii\db\ActiveRecord
             [['media_type', 'file_size', 'status', 'created_at', 'updated_at'], 'integer'],
             [['alt', 'file_name'], 'string', 'max' => 255],
             [['file_type'], 'string', 'max' => 45],
+        ];
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function behaviors()
+    {
+        return [
+            TimestampBehavior::className(),
         ];
     }
 
