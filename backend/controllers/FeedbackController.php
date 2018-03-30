@@ -3,6 +3,8 @@
 namespace backend\controllers;
 
 use Yii;
+use common\models\RoomType;
+use common\models\FacilityType;
 use common\models\Feedback;
 use common\models\FeedbackSearch;
 use yii\web\Controller;
@@ -46,6 +48,23 @@ class FeedbackController extends Controller
     public function actionIndex()
     {
         $searchModel = new FeedbackSearch();
+		$searchModel->feedback_type = Feedback::TYPE_FEEDBACK;
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+
+        return $this->render('index', [
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
+        ]);
+    }
+
+    /**
+     * Lists all Feedback models.
+     * @return mixed
+     */
+    public function actionContactIndex()
+    {
+        $searchModel = new FeedbackSearch();
+		$searchModel->feedback_type = Feedback::TYPE_CONTACT;
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
@@ -72,9 +91,16 @@ class FeedbackController extends Controller
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
-    public function actionCreate()
+    public function actionCreate($type=Contact::TYPE_FEEDBACK)
     {
+		if(!array_key_exists($type, Feedback::$types)){
+			throw new NotFoundHttpException('Feedback type not found.');
+		}
         $model = new Feedback();
+		$model->feedback_type = $type;
+		
+		$roomTypes = RoomType::find()->all();
+		$facilityTypes = FacilityType::find()->all();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
@@ -82,6 +108,8 @@ class FeedbackController extends Controller
 
         return $this->render('create', [
             'model' => $model,
+            'roomTypes' => $roomTypes,
+            'facilityTypes' => $facilityTypes,
         ]);
     }
 
@@ -96,12 +124,16 @@ class FeedbackController extends Controller
     {
         $model = $this->findModel($id);
 
+		$roomTypes = RoomType::find()->all();
+		$facilityTypes = FacilityType::find()->all();
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
         }
 
         return $this->render('update', [
             'model' => $model,
+            'roomTypes' => $roomTypes,
+            'facilityTypes' => $facilityTypes,
         ]);
     }
 

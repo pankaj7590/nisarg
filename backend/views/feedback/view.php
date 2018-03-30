@@ -2,12 +2,23 @@
 
 use yii\helpers\Html;
 use yii\widgets\DetailView;
+use common\models\Feedback;
 
 /* @var $this yii\web\View */
 /* @var $model common\models\Feedback */
 
+switch($model->feedback_type){
+	case Feedback::TYPE_FEEDBACK:
+		$types = 'Feedbacks';
+		$url = ['feedback'];
+		break;
+	case Feedback::TYPE_CONTACT:
+		$types = 'Contacts';
+		$url = ['contact-index'];
+		break;
+}
 $this->title = $model->name;
-$this->params['breadcrumbs'][] = ['label' => 'Feedbacks', 'url' => ['index']];
+$this->params['breadcrumbs'][] = ['label' => $types, 'url' => $url];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="feedback-view">
@@ -28,17 +39,20 @@ $this->params['breadcrumbs'][] = $this->title;
     <?= DetailView::widget([
         'model' => $model,
         'attributes' => [
-            'id',
             'name',
             'surname',
             'email:email',
-            'feedback_type',
+            [
+				'attribute' => 'feedback_type',
+				'value' => function($data){
+					return ($data->feedback_type?Feedback::$types[$data->feedback_type]:NULL);
+				},
+			],
             'room_type',
             'facility_type',
             'message:ntext',
-            'status',
-            'created_at',
-            'updated_at',
+            'created_at:datetime',
+            'updated_at:datetime',
         ],
     ]) ?>
 

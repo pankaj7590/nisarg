@@ -5,7 +5,7 @@ use yii\helpers\Html;
 /* @var $this yii\web\View */
 /* @var $model common\models\Feedback */
 
-$this->title = 'Update Feedback: {nameAttribute}';
+$this->title = 'Update Feedback: '.$model->name;
 $this->params['breadcrumbs'][] = ['label' => 'Feedbacks', 'url' => ['index']];
 $this->params['breadcrumbs'][] = ['label' => $model->name, 'url' => ['view', 'id' => $model->id]];
 $this->params['breadcrumbs'][] = 'Update';
@@ -16,6 +16,8 @@ $this->params['breadcrumbs'][] = 'Update';
 
     <?= $this->render('_form', [
         'model' => $model,
+            'roomTypes' => $roomTypes,
+            'facilityTypes' => $facilityTypes,
     ]) ?>
 
 </div>

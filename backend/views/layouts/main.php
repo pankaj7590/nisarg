@@ -132,8 +132,8 @@ $baseUrl = Yii::$app->urlManager->baseUrl;
                                         "icon" => "calendar",
                                         "url" => "#",
                                         "items" => [
-                                            ["label" => "Add News/Event", "url" => ["news-event/create"]],
-                                            ["label" => "Manage News & Events", "url" => ["news-event/index"]],
+                                            ["label" => "Manage News", "url" => ["news-event/index"]],
+                                            ["label" => "Manage Events", "url" => ["news-event/event-index"]],
                                         ],
                                     ],
                                     [
@@ -141,7 +141,8 @@ $baseUrl = Yii::$app->urlManager->baseUrl;
                                         "icon" => "envelope",
                                         "url" => "#",
                                         "items" => [
-                                            ["label" => "Manage Feedbacks/Contacts", "url" => ["feedback/index"]],
+                                            ["label" => "Manage Feedbacks", "url" => ["feedback/index"]],
+                                            ["label" => "Manage Contacts", "url" => ["feedback/contact-index"]],
                                         ],
                                     ],
                                     [
@@ -149,6 +150,7 @@ $baseUrl = Yii::$app->urlManager->baseUrl;
                                         "icon" => "gears",
                                         "url" => "#",
                                         "items" => [
+                                            ["label" => "Add Setting", "url" => ["setting/create"]],
                                             ["label" => "Manage Settings", "url" => ["setting/index"]],
                                         ],
                                     ],

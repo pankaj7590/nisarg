@@ -9,31 +9,25 @@ use yii\widgets\ActiveForm;
 ?>
 
 <div class="setting-form">
-
     <?php $form = ActiveForm::begin(); ?>
-
-    <?= $form->field($model, 'name')->textInput(['maxlength' => true]) ?>
-
-    <?= $form->field($model, 'label')->textInput(['maxlength' => true]) ?>
-
-    <?= $form->field($model, 'default_value')->textarea(['rows' => 6]) ?>
-
-    <?= $form->field($model, 'value')->textarea(['rows' => 6]) ?>
-
-    <?= $form->field($model, 'status')->textInput() ?>
-
-    <?= $form->field($model, 'created_by')->textInput() ?>
-
-    <?= $form->field($model, 'updated_by')->textInput() ?>
-
-    <?= $form->field($model, 'created_at')->textInput() ?>
-
-    <?= $form->field($model, 'updated_at')->textInput() ?>
-
-    <div class="form-group">
-        <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>
-    </div>
-
+		<div class='row'>
+			<div class='col-md-3'>
+				<?= $form->field($model, 'name')->textInput(['maxlength' => true]) ?>
+			</div>
+			<div class='col-md-3'>
+				<?= $form->field($model, 'label')->textInput(['maxlength' => true]) ?>
+			</div>
+			<div class='col-md-3'>
+				<?= $form->field($model, 'default_value')->textarea(['rows' => 1]) ?>
+			</div>
+			<div class='col-md-3'>
+				 <?= $form->field($model, 'value')->textarea(['rows' => 1]) ?>
+			</div>
+			<div class='col-md-12'>
+				<div class="form-group">
+					<?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>
+				</div>
+			</div>
+		</div>
     <?php ActiveForm::end(); ?>
-
 </div>

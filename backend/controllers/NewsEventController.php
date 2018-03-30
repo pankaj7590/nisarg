@@ -46,6 +46,23 @@ class NewsEventController extends Controller
     public function actionIndex()
     {
         $searchModel = new NewsEventSearch();
+		$searchModel->type = NewsEvent::TYPE_NEWS;
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+
+        return $this->render('index', [
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
+        ]);
+    }
+
+    /**
+     * Lists all NewsEvent models.
+     * @return mixed
+     */
+    public function actionEventIndex()
+    {
+        $searchModel = new NewsEventSearch();
+		$searchModel->type = NewsEvent::TYPE_EVENT;
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
@@ -72,9 +89,14 @@ class NewsEventController extends Controller
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
-    public function actionCreate()
+    public function actionCreate($type=NewsEvent::TYPE_NEWS)
     {
+		if(!array_key_exists($type, NewsEvent::$types)){
+			throw new NotFoundHttpException('News event type not found.');
+		}
+		
         $model = new NewsEvent();
+		$model->type = $type;
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);

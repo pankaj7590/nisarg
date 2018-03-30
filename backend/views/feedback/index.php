@@ -2,13 +2,23 @@
 
 use yii\helpers\Html;
 use yii\grid\GridView;
+use common\models\Feedback;
 
 /* @var $this yii\web\View */
 /* @var $searchModel common\models\FeedbackSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Feedbacks';
+switch($searchModel->feedback_type){
+	case Feedback::TYPE_FEEDBACK:
+		$this->title = 'Feedbacks';
+		break;
+	case Feedback::TYPE_CONTACT:
+		$this->title = 'Contacts';
+		break;
+}
 $this->params['breadcrumbs'][] = $this->title;
+
+$type = Feedback::$types[$searchModel->feedback_type];
 ?>
 <div class="feedback-index">
 
@@ -16,7 +26,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <p>
-        <?= Html::a('Create Feedback', ['create'], ['class' => 'btn btn-success']) ?>
+        <?= Html::a('Add '.$type, ['create', 'type' => $searchModel->feedback_type], ['class' => 'btn btn-success']) ?>
     </p>
 
     <?= GridView::widget([
@@ -25,17 +35,11 @@ $this->params['breadcrumbs'][] = $this->title;
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
 
-            'id',
             'name',
             'surname',
             'email:email',
-            'feedback_type',
-            //'room_type',
-            //'facility_type',
-            //'message:ntext',
-            //'status',
-            //'created_at',
-            //'updated_at',
+            'message:ntext',
+            'created_at:datetime',
 
             ['class' => 'yii\grid\ActionColumn'],
         ],

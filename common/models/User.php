@@ -7,6 +7,8 @@ use yii\behaviors\TimestampBehavior;
 use yii\behaviors\BlameableBehavior;
 use yii\db\ActiveRecord;
 use yii\web\IdentityInterface;
+use yii\web\UploadedFile;
+use common\components\MediaUploader;
 
 /**
  * User model
@@ -60,9 +62,15 @@ use yii\web\IdentityInterface;
  */
 class User extends ActiveRecord implements IdentityInterface
 {
+	public $profilePictureFile, $password;
+	
     const STATUS_DELETED = 0;
     const STATUS_ACTIVE = 10;
 
+	public static $statuses = [
+		self::STATUS_DELETED => 'Deleted',
+		self::STATUS_ACTIVE => 'Active',
+	];
 
     /**
      * @inheritdoc
@@ -93,9 +101,10 @@ class User extends ActiveRecord implements IdentityInterface
         return [
             ['status', 'default', 'value' => self::STATUS_ACTIVE],
             ['status', 'in', 'range' => [self::STATUS_ACTIVE, self::STATUS_DELETED]],
+            [['profilePictureFile'], 'file', 'skipOnEmpty' => true, 'extensions' => 'jpg,png'],
            [['profile_picture', 'status', 'created_by', 'updated_by', 'created_at', 'updated_at'], 'integer'],
            [['name', 'username', 'auth_key', 'password_hash', 'email', 'phone'], 'required'],
-           [['name', 'username', 'password_hash', 'password_reset_token', 'email'], 'string', 'max' => 255],
+           [['name', 'username', 'password_hash', 'password_reset_token', 'email', 'password'], 'string', 'max' => 255],
            [['auth_key'], 'string', 'max' => 32],
            [['phone'], 'string', 'max' => 20],
            [['username'], 'unique'],
@@ -105,6 +114,30 @@ class User extends ActiveRecord implements IdentityInterface
            [['created_by'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['created_by' => 'id']],
            [['updated_by'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['updated_by' => 'id']],
         ];
+    }
+	
+    /**
+     * @inheritdoc
+     */
+    public function beforeSave($insert)
+    {
+        if (parent::beforeSave($insert)) {
+			if(!$insert && $this->password){
+				$this->setPassword($this->password);
+				$this->generateAuthKey();
+			}
+			$image = UploadedFile::getInstance($this, 'profilePictureFile');
+			if($image){
+				if($image != null && !$image->getHasError()) {
+					if($mediaDetails = MediaUploader::uploadFiles($image)){
+						$this->profile_picture = $mediaDetails['media_id'];
+					}
+				}
+			}
+            return true;
+        } else {
+            return false;
+        }
     }
 	
    /**
@@ -127,6 +160,7 @@ class User extends ActiveRecord implements IdentityInterface
            'updated_by' => 'Updated By',
            'created_at' => 'Created At',
            'updated_at' => 'Updated At',
+            'profilePictureFile' => 'Profile Picture',
 		];
 	}
 

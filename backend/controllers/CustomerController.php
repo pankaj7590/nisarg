@@ -75,9 +75,14 @@ class CustomerController extends Controller
     public function actionCreate()
     {
         $model = new Customer();
-
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+        if ($model->load(Yii::$app->request->post())){
+			$model->setPassword($model->password);
+			$model->generateAuthKey();
+			if($model->save()) {
+				return $this->redirect(['view', 'id' => $model->id]);
+			}else{
+				Yii::$app->session->setFlash('error', json_encode($model->getErrors()));
+			}
         }
 
         return $this->render('create', [

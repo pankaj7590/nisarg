@@ -16,7 +16,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <p>
-        <?= Html::a('Create Customer', ['create'], ['class' => 'btn btn-success']) ?>
+        <?= Html::a('Add Customer', ['create'], ['class' => 'btn btn-success']) ?>
     </p>
 
     <?= GridView::widget([
@@ -25,21 +25,19 @@ $this->params['breadcrumbs'][] = $this->title;
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
 
-            'id',
-            'profile_picture',
+			[
+				'attribute' => 'profile_picture',
+				'filter' => false,
+				'value' => function($data){
+					$fileName = ($data->profilePicture?$data->profilePicture->file_name:"");
+					return \common\components\MediaHelper::getImageUrl($fileName);
+				},
+				'format' => ['image', ['width' => '100']],
+			],
             'name',
-            'surname',
             'username',
-            //'auth_key',
-            //'password_hash',
-            //'password_reset_token',
-            //'email:email',
-            //'phone',
-            //'status',
-            //'created_by',
-            //'updated_by',
-            //'created_at',
-            //'updated_at',
+            'email:email',
+            'phone',
 
             ['class' => 'yii\grid\ActionColumn'],
         ],

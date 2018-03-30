@@ -2,12 +2,23 @@
 
 use yii\helpers\Html;
 use yii\grid\GridView;
+use common\models\NewsEvent;
 
 /* @var $this yii\web\View */
 /* @var $searchModel common\models\NewsEventSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'News Events';
+$this->title = NewsEvent::$types[$searchModel->type];
+switch($searchModel->type){
+	case NewsEvent::TYPE_EVENT:
+		$type = 'Event';
+		$url = ['create', 'type' => $searchModel->type];
+		break;
+	default:
+		$type = 'News';
+		$url = ['create'];
+		break;
+}
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="news-event-index">
@@ -16,7 +27,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <p>
-        <?= Html::a('Create News Event', ['create'], ['class' => 'btn btn-success']) ?>
+        <?= Html::a('Add '.$type, $url, ['class' => 'btn btn-success']) ?>
     </p>
 
     <?= GridView::widget([
@@ -25,18 +36,18 @@ $this->params['breadcrumbs'][] = $this->title;
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
 
-            'id',
+			[
+				'attribute' => 'photo',
+				'filter' => false,
+				'value' => function($data){
+					$fileName = ($data->photoPicture?$data->photoPicture->file_name:"");
+					return \common\components\MediaHelper::getImageUrl($fileName);
+				},
+				'format' => ['image', ['width' => '100']],
+			],
             'title',
-            'content:ntext',
-            'photo',
             'news_event_date',
-            //'type',
-            //'place:ntext',
-            //'status',
-            //'created_by',
-            //'updated_by',
-            //'created_at',
-            //'updated_at',
+            'place:ntext',
 
             ['class' => 'yii\grid\ActionColumn'],
         ],

@@ -22,6 +22,13 @@ use yii\behaviors\TimestampBehavior;
  */
 class Feedback extends \yii\db\ActiveRecord
 {
+	const TYPE_FEEDBACK = 1;
+	const TYPE_CONTACT = 2;
+	
+	public static $types = [
+		self::TYPE_FEEDBACK => 'Feedback',
+		self::TYPE_CONTACT => 'Contact',
+	];
     /**
      * @inheritdoc
      */
