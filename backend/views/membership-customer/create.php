@@ -6,8 +6,8 @@ use yii\helpers\Html;
 /* @var $this yii\web\View */
 /* @var $model common\models\MembershipCustomer */
 
-$this->title = 'Create Membership Customer';
-$this->params['breadcrumbs'][] = ['label' => 'Membership Customers', 'url' => ['index']];
+$this->title = 'Add Customer Membership';
+$this->params['breadcrumbs'][] = ['label' => 'Memberships', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="membership-customer-create">
@@ -16,6 +16,8 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <?= $this->render('_form', [
         'model' => $model,
+            'memberships' => $memberships,
+            'customers' => $customers,
     ]) ?>
 
 </div>

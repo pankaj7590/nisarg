@@ -16,7 +16,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <p>
-        <?= Html::a('Create Facility Type', ['create'], ['class' => 'btn btn-success']) ?>
+        <?= Html::a('Add Facility Type', ['create'], ['class' => 'btn btn-success']) ?>
     </p>
 
     <?= GridView::widget([
@@ -25,17 +25,26 @@ $this->params['breadcrumbs'][] = $this->title;
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
 
-            'id',
-            'icon_image',
-            'cover_image',
+			[
+				'attribute' => 'icon_image',
+				'filter' => false,
+				'value' => function($data){
+					$fileName = ($data->iconImage?$data->iconImage->file_name:"");
+					return \common\components\MediaHelper::getImageUrl($fileName);
+				},
+				'format' => ['image', ['width' => '100']],
+			],
+			[
+				'attribute' => 'cover_image',
+				'filter' => false,
+				'value' => function($data){
+					$fileName = ($data->coverImage?$data->coverImage->file_name:"");
+					return \common\components\MediaHelper::getImageUrl($fileName);
+				},
+				'format' => ['image', ['width' => '100']],
+			],
             'name',
-            'description:ntext',
-            //'charges',
-            //'status',
-            //'created_by',
-            //'updated_by',
-            //'created_at',
-            //'updated_at',
+            'charges',
 
             ['class' => 'yii\grid\ActionColumn'],
         ],

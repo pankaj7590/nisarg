@@ -11,6 +11,7 @@ use yii\behaviors\BlameableBehavior;
  *
  * @property int $id
  * @property string $name
+ * @property string $information
  * @property int $type
  * @property double $discount
  * @property int $status
@@ -25,6 +26,18 @@ use yii\behaviors\BlameableBehavior;
  */
 class Membership extends \yii\db\ActiveRecord
 {
+	const TYPE_PLATINUM = 1;
+	const TYPE_GOLD = 2;
+	const TYPE_SILVER = 3;
+	const TYPE_BRONZE = 4;
+	
+	public static $types = [
+		self::TYPE_PLATINUM => 'Platinum',
+		self::TYPE_GOLD => 'Gold',
+		self::TYPE_SILVER => 'Silver',
+		self::TYPE_BRONZE => 'Bronze',
+	];
+	
     /**
      * @inheritdoc
      */
@@ -43,6 +56,7 @@ class Membership extends \yii\db\ActiveRecord
             [['type', 'status', 'created_by', 'updated_by', 'created_at', 'updated_at'], 'integer'],
             [['discount'], 'number'],
             [['name'], 'string', 'max' => 255],
+            [['information'], 'string'],
             [['created_by'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['created_by' => 'id']],
             [['updated_by'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['updated_by' => 'id']],
         ];
@@ -69,6 +83,7 @@ class Membership extends \yii\db\ActiveRecord
         return [
             'id' => 'ID',
             'name' => 'Name',
+            'information' => 'Information',
             'type' => 'Type',
             'discount' => 'Discount',
             'status' => 'Status',

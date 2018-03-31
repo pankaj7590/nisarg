@@ -54,9 +54,10 @@ class NewsEvent extends \yii\db\ActiveRecord
     {
         return [
             [['title', 'content'], 'required'],
+            [['news_event_date'], 'safe'],
             [['photoPictureFile'], 'file', 'skipOnEmpty' => true, 'extensions' => 'jpg,png'],
             [['content', 'place'], 'string'],
-            [['photo', 'news_event_date', 'type', 'status', 'created_by', 'updated_by', 'created_at', 'updated_at'], 'integer'],
+            [['photo', 'type', 'status', 'created_by', 'updated_by', 'created_at', 'updated_at'], 'integer'],
             [['title'], 'string', 'max' => 255],
             [['updated_by'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['updated_by' => 'id']],
             [['photo'], 'exist', 'skipOnError' => true, 'targetClass' => Media::className(), 'targetAttribute' => ['photo' => 'id']],

@@ -5,9 +5,9 @@ use yii\helpers\Html;
 /* @var $this yii\web\View */
 /* @var $model common\models\MembershipCustomer */
 
-$this->title = 'Update Membership Customer: {nameAttribute}';
+$this->title = 'Update Customer Membership : '.($model->customer->name.'-'.$model->membership->name);
 $this->params['breadcrumbs'][] = ['label' => 'Membership Customers', 'url' => ['index']];
-$this->params['breadcrumbs'][] = ['label' => $model->id, 'url' => ['view', 'id' => $model->id]];
+$this->params['breadcrumbs'][] = ['label' => ($model->customer->name.'-'.$model->membership->name), 'url' => ['view', 'id' => $model->id]];
 $this->params['breadcrumbs'][] = 'Update';
 ?>
 <div class="membership-customer-update">
@@ -16,6 +16,8 @@ $this->params['breadcrumbs'][] = 'Update';
 
     <?= $this->render('_form', [
         'model' => $model,
+            'memberships' => $memberships,
+            'customers' => $customers,
     ]) ?>
 
 </div>

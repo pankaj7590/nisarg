@@ -9,33 +9,38 @@ use yii\widgets\ActiveForm;
 ?>
 
 <div class="facility-type-form">
-
     <?php $form = ActiveForm::begin(); ?>
-
-    <?= $form->field($model, 'icon_image')->textInput() ?>
-
-    <?= $form->field($model, 'cover_image')->textInput() ?>
-
-    <?= $form->field($model, 'name')->textInput(['maxlength' => true]) ?>
-
-    <?= $form->field($model, 'description')->textarea(['rows' => 6]) ?>
-
-    <?= $form->field($model, 'charges')->textInput() ?>
-
-    <?= $form->field($model, 'status')->textInput() ?>
-
-    <?= $form->field($model, 'created_by')->textInput() ?>
-
-    <?= $form->field($model, 'updated_by')->textInput() ?>
-
-    <?= $form->field($model, 'created_at')->textInput() ?>
-
-    <?= $form->field($model, 'updated_at')->textInput() ?>
-
-    <div class="form-group">
-        <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>
-    </div>
-
+		<div class='row'>
+			<div class='col-md-3'>
+				<?php if($model->iconImage){?>
+					<div class="controls">
+						<img src="<?= \common\components\MediaHelper::getImageUrl($model->iconImage->file_name)?>" width="200px"/>
+					</div>
+				<?php }?>
+				<?= $form->field($model, 'iconImageFile')->fileInput() ?>
+			</div>
+			<div class='col-md-9'>
+				<?php if($model->coverImage){?>
+					<div class="controls">
+						<img src="<?= \common\components\MediaHelper::getImageUrl($model->coverImage->file_name)?>" width="200px"/>
+					</div>
+				<?php }?>
+				<?= $form->field($model, 'coverImageFile')->fileInput() ?>
+			</div>
+		</div>
+		<div class='row'>
+			<div class='col-md-3'>
+				<?= $form->field($model, 'name')->textInput(['maxlength' => true]) ?>
+				<?= $form->field($model, 'charges')->textInput() ?>
+			</div>
+			<div class='col-md-9'>
+				<?= $form->field($model, 'description')->textarea(['rows' => 5]) ?>
+			</div>
+			<div class='col-md-12'>
+				<div class="form-group">
+					<?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>
+				</div>
+			</div>
+		</div>
     <?php ActiveForm::end(); ?>
-
 </div>

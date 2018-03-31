@@ -2,6 +2,7 @@
 
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
+use kartik\datetime\DateTimePicker;
 
 /* @var $this yii\web\View */
 /* @var $model common\models\MembershipCustomer */
@@ -9,37 +10,37 @@ use yii\widgets\ActiveForm;
 ?>
 
 <div class="membership-customer-form">
-
     <?php $form = ActiveForm::begin(); ?>
-
-    <?= $form->field($model, 'membership_id')->textInput() ?>
-
-    <?= $form->field($model, 'customer_id')->textInput() ?>
-
-    <?= $form->field($model, 'type')->textInput() ?>
-
-    <?= $form->field($model, 'from_date')->textInput() ?>
-
-    <?= $form->field($model, 'to_date')->textInput() ?>
-
-    <?= $form->field($model, 'discount')->textInput() ?>
-
-    <?= $form->field($model, 'charges')->textInput() ?>
-
-    <?= $form->field($model, 'status')->textInput() ?>
-
-    <?= $form->field($model, 'created_by')->textInput() ?>
-
-    <?= $form->field($model, 'updated_by')->textInput() ?>
-
-    <?= $form->field($model, 'created_at')->textInput() ?>
-
-    <?= $form->field($model, 'updated_at')->textInput() ?>
-
-    <div class="form-group">
-        <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>
-    </div>
-
+		<div class='row'>
+			<div class='col-md-6'>
+				<?= $form->field($model, 'membership_id')->dropdownList($memberships, ['prompt' => 'Select membership']) ?>
+				<?= $form->field($model, 'from_date')->textInput()->widget(DateTimePicker::classname(), [
+					'options' => ['placeholder' => 'Enter from date...'],
+					'pluginOptions' => [
+						'autoclose' => true,
+						'minView' => 4,
+						'format' => Yii::$app->params['jsDateFormat'],
+					]
+				]); ?>
+				<?= $form->field($model, 'discount')->textInput() ?>
+			</div>
+			<div class='col-md-6'>
+				<?= $form->field($model, 'customer_id')->dropdownList($customers, ['prompt' => 'Select customer']) ?>
+				<?= $form->field($model, 'to_date')->textInput()->widget(DateTimePicker::classname(), [
+					'options' => ['placeholder' => 'Enter to date...'],
+					'pluginOptions' => [
+						'autoclose' => true,
+						'minView' => 4,
+						'format' => Yii::$app->params['jsDateFormat'],
+					]
+				]); ?>
+				<?= $form->field($model, 'charges')->textInput() ?>
+			</div>
+			<div class='col-md-12'>
+				<div class="form-group">
+					<?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>
+				</div>
+			</div>
+		</div>
     <?php ActiveForm::end(); ?>
-
 </div>

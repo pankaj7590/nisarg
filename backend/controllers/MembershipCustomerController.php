@@ -3,6 +3,8 @@
 namespace backend\controllers;
 
 use Yii;
+use common\models\Membership;
+use common\models\Customer;
 use common\models\MembershipCustomer;
 use common\models\MembershipCustomerSearch;
 use yii\web\Controller;
@@ -75,13 +77,32 @@ class MembershipCustomerController extends Controller
     public function actionCreate()
     {
         $model = new MembershipCustomer();
+		
+		$membershipModels = Membership::find()->all();
+		$memberships = [];
+		foreach($membershipModels as $membership){
+			$memberships[$membership->id] = $membership->name;
+		}
+		
+		$customerModels = Customer::find()->all();
+		$customers = [];
+		foreach($customerModels as $customer){
+			$customers[$customer->id] = $customer->name;
+		}
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+        if ($model->load(Yii::$app->request->post())){
+			$model->type = $model->membership->type;
+			if($model->save()) {
+				return $this->redirect(['view', 'id' => $model->id]);
+			}else{
+				Yii::$app->session->setFlash('error', json_encode($model->getErrors()));
+			}
         }
 
         return $this->render('create', [
             'model' => $model,
+            'memberships' => $memberships,
+            'customers' => $customers,
         ]);
     }
 
@@ -96,12 +117,26 @@ class MembershipCustomerController extends Controller
     {
         $model = $this->findModel($id);
 
+		$membershipModels = Membership::find()->all();
+		$memberships = [];
+		foreach($membershipModels as $membership){
+			$memberships[$membership->id] = $membership->name;
+		}
+		
+		$customerModels = Customer::find()->all();
+		$customers = [];
+		foreach($customerModels as $customer){
+			$customers[$customer->id] = $customer->name;
+		}
+		
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
         }
 
         return $this->render('update', [
             'model' => $model,
+            'memberships' => $memberships,
+            'customers' => $customers,
         ]);
     }
 

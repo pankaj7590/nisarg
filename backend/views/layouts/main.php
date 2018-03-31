@@ -105,6 +105,8 @@ $baseUrl = Yii::$app->urlManager->baseUrl;
                                         "items" => [
                                             ["label" => "Add Room", "url" => ["room/create"]],
                                             ["label" => "Manage Rooms", "url" => ["room/index"]],
+                                            ["label" => "Add Room Type", "url" => ["room-type/create"]],
+                                            ["label" => "Manage Room Types", "url" => ["room-type/index"]],
                                         ],
                                     ],
                                     [

@@ -28,18 +28,33 @@ $this->params['breadcrumbs'][] = $this->title;
     <?= DetailView::widget([
         'model' => $model,
         'attributes' => [
-            'id',
-            'cover_image',
+			[
+				'attribute' => 'coverImageFile',
+				'filter' => false,
+				'value' => function($data){
+					$fileName = ($data->coverImage?$data->coverImage->file_name:"");
+					return \common\components\MediaHelper::getImageUrl($fileName);
+				},
+				'format' => ['image', ['width' => '100']],
+			],
             'name',
-            'description:ntext',
             'charges',
             'occupancy',
             'beds',
-            'status',
-            'created_by',
-            'updated_by',
-            'created_at',
-            'updated_at',
+            [
+				'attribute' => 'created_by',
+				'value' => function($data){
+					return ($data->createdBy?$data->createdBy->name:NULL);
+				},
+			],
+            [
+				'attribute' => 'updated_by',
+				'value' => function($data){
+					return ($data->updatedBy?$data->updatedBy->name:NULL);
+				},
+			],
+            'created_at:datetime',
+            'updated_at:datetime',
         ],
     ]) ?>
 

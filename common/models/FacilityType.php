@@ -5,6 +5,8 @@ namespace common\models;
 use Yii;
 use yii\behaviors\TimestampBehavior;
 use yii\behaviors\BlameableBehavior;
+use yii\web\UploadedFile;
+use common\components\MediaUploader;
 
 /**
  * This is the model class for table "facility_type".
@@ -31,6 +33,8 @@ use yii\behaviors\BlameableBehavior;
  */
 class FacilityType extends \yii\db\ActiveRecord
 {
+	public $iconImageFile, $coverImageFile;
+	
     /**
      * @inheritdoc
      */
@@ -46,6 +50,7 @@ class FacilityType extends \yii\db\ActiveRecord
     {
         return [
             [['icon_image', 'cover_image', 'status', 'created_by', 'updated_by', 'created_at', 'updated_at'], 'integer'],
+            [['iconImageFile', 'coverImageFile'], 'file', 'skipOnEmpty' => true, 'extensions' => 'jpg,png'],
             [['name'], 'required'],
             [['description'], 'string'],
             [['charges'], 'number'],
@@ -55,6 +60,34 @@ class FacilityType extends \yii\db\ActiveRecord
             [['created_by'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['created_by' => 'id']],
             [['updated_by'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['updated_by' => 'id']],
         ];
+    }
+	
+    /**
+     * @inheritdoc
+     */
+    public function beforeSave($insert)
+    {
+        if (parent::beforeSave($insert)) {
+			$image = UploadedFile::getInstance($this, 'iconImageFile');
+			if($image){
+				if($image != null && !$image->getHasError()) {
+					if($mediaDetails = MediaUploader::uploadFiles($image)){
+						$this->icon_image = $mediaDetails['media_id'];
+					}
+				}
+			}
+			$image = UploadedFile::getInstance($this, 'coverImageFile');
+			if($image){
+				if($image != null && !$image->getHasError()) {
+					if($mediaDetails = MediaUploader::uploadFiles($image)){
+						$this->cover_image = $mediaDetails['media_id'];
+					}
+				}
+			}
+            return true;
+        } else {
+            return false;
+        }
     }
 
     /**
@@ -79,6 +112,8 @@ class FacilityType extends \yii\db\ActiveRecord
             'id' => 'ID',
             'icon_image' => 'Icon Image',
             'cover_image' => 'Cover Image',
+            'coverImageFile' => 'Cover Image',
+            'iconImageFile' => 'Icon Image',
             'name' => 'Name',
             'description' => 'Description',
             'charges' => 'Charges',

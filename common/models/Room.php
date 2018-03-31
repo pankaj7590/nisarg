@@ -5,6 +5,8 @@ namespace common\models;
 use Yii;
 use yii\behaviors\TimestampBehavior;
 use yii\behaviors\BlameableBehavior;
+use yii\web\UploadedFile;
+use common\components\MediaUploader;
 
 /**
  * This is the model class for table "room".
@@ -32,6 +34,7 @@ use yii\behaviors\BlameableBehavior;
  */
 class Room extends \yii\db\ActiveRecord
 {
+	public $coverImageFile;
     /**
      * @inheritdoc
      */
@@ -47,6 +50,7 @@ class Room extends \yii\db\ActiveRecord
     {
         return [
             [['cover_image', 'type', 'occupancy', 'beds', 'status', 'created_by', 'updated_by', 'created_at', 'updated_at'], 'integer'],
+            [['coverImageFile'], 'file', 'skipOnEmpty' => true, 'extensions' => 'jpg,png'],
             [['name', 'charges'], 'required'],
             [['description'], 'string'],
             [['charges'], 'number'],
@@ -56,6 +60,26 @@ class Room extends \yii\db\ActiveRecord
             [['created_by'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['created_by' => 'id']],
             [['updated_by'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['updated_by' => 'id']],
         ];
+    }
+	
+    /**
+     * @inheritdoc
+     */
+    public function beforeSave($insert)
+    {
+        if (parent::beforeSave($insert)) {
+			$image = UploadedFile::getInstance($this, 'coverImageFile');
+			if($image){
+				if($image != null && !$image->getHasError()) {
+					if($mediaDetails = MediaUploader::uploadFiles($image)){
+						$this->cover_image = $mediaDetails['media_id'];
+					}
+				}
+			}
+            return true;
+        } else {
+            return false;
+        }
     }
 
     /**
@@ -79,6 +103,7 @@ class Room extends \yii\db\ActiveRecord
         return [
             'id' => 'ID',
             'cover_image' => 'Cover Image',
+            'coverImageFile' => 'Cover Image',
             'name' => 'Name',
             'description' => 'Description',
             'type' => 'Type',
@@ -120,7 +145,7 @@ class Room extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getType0()
+    public function getRoomType()
     {
         return $this->hasOne(RoomType::className(), ['id' => 'type']);
     }

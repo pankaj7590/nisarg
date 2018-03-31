@@ -4,11 +4,13 @@ namespace backend\controllers;
 
 use Yii;
 use common\models\Room;
+use common\models\RoomType;
 use common\models\RoomSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
+use common\components\MediaUploader;
 
 /**
  * RoomController implements the CRUD actions for Room model.
@@ -72,16 +74,39 @@ class RoomController extends Controller
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
-    public function actionCreate()
+    public function actionCreate($type=null)
     {
         $model = new Room();
+		if($type){
+			$roomTypeModel = RoomType::findOne($type);
+			if(!$roomTypeModel){
+				throw new NotFoundHttpException('Room type not found.');
+			}
+			if($roomTypeModel->coverImage){
+				$duplicatedFile = MediaUploader::duplicateFile($roomTypeModel->coverImage->file_name, $roomTypeModel->coverImage);
+				$model->cover_image = $duplicatedFile['media_id'];
+			}
+			$model->name = $roomTypeModel->name;
+			$model->charges = $roomTypeModel->charges;
+			$model->occupancy = $roomTypeModel->occupancy;
+			$model->beds = $roomTypeModel->beds;
+			$model->description = $roomTypeModel->description;
+			$model->type = $roomTypeModel->id;
+		}
 
+		$roomTypeModels = RoomType::find()->all();
+		$roomTypes = [];
+		foreach($roomTypeModels as $roomType){
+			$roomTypes[$roomType->id] = $roomType->name;
+		}
+		
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
         }
 
         return $this->render('create', [
             'model' => $model,
+            'roomTypes' => $roomTypes,
         ]);
     }
 
@@ -96,12 +121,36 @@ class RoomController extends Controller
     {
         $model = $this->findModel($id);
 
+		if($type){
+			$roomTypeModel = RoomType::findOne($type);
+			if(!$roomTypeModel){
+				throw new NotFoundHttpException('Room type not found.');
+			}
+			if($roomTypeModel->coverImage){
+				$duplicatedFile = MediaUploader::duplicateFile($roomTypeModel->coverImage->file_name, $roomTypeModel->coverImage);
+				$model->cover_image = $duplicatedFile['media_id'];
+			}
+			$model->name = $roomTypeModel->name;
+			$model->charges = $roomTypeModel->charges;
+			$model->occupancy = $roomTypeModel->occupancy;
+			$model->beds = $roomTypeModel->beds;
+			$model->description = $roomTypeModel->description;
+			$model->type = $roomTypeModel->id;
+		}
+		
+		$roomTypeModels = RoomType::find()->all();
+		$roomTypes = [];
+		foreach($roomTypeModels as $roomType){
+			$roomTypes[$roomType->id] = $roomType->name;
+		}
+		
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
         }
 
         return $this->render('update', [
             'model' => $model,
+            'roomTypes' => $roomTypes,
         ]);
     }
 

@@ -19,7 +19,7 @@ class MembershipSearch extends Membership
     {
         return [
             [['id', 'type', 'status', 'created_by', 'updated_by', 'created_at', 'updated_at'], 'integer'],
-            [['name'], 'safe'],
+            [['name', 'information'], 'safe'],
             [['discount'], 'number'],
         ];
     }
@@ -71,6 +71,7 @@ class MembershipSearch extends Membership
         ]);
 
         $query->andFilterWhere(['like', 'name', $this->name]);
+        $query->andFilterWhere(['information', 'name', $this->information]);
 
         return $dataProvider;
     }

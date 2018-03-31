@@ -44,14 +44,48 @@ class MembershipCustomer extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
+            [['membership_id', 'customer_id'], 'unique', 'skipOnError' => true, 'targetAttribute' => ['membership_id', 'customer_id']],
             [['membership_id', 'customer_id', 'type', 'from_date', 'to_date', 'discount', 'charges'], 'required'],
-            [['membership_id', 'customer_id', 'type', 'from_date', 'to_date', 'status', 'created_by', 'updated_by', 'created_at', 'updated_at'], 'integer'],
+            [['membership_id', 'customer_id', 'type', 'status', 'created_by', 'updated_by', 'created_at', 'updated_at'], 'integer'],
             [['discount', 'charges'], 'number'],
+            [['from_date', 'to_date'], 'safe'],
             [['customer_id'], 'exist', 'skipOnError' => true, 'targetClass' => Customer::className(), 'targetAttribute' => ['customer_id' => 'id']],
             [['membership_id'], 'exist', 'skipOnError' => true, 'targetClass' => Membership::className(), 'targetAttribute' => ['membership_id' => 'id']],
             [['created_by'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['created_by' => 'id']],
             [['updated_by'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['updated_by' => 'id']],
         ];
+    }
+	
+    /**
+     * @inheritdoc
+     */
+    public function beforeSave($insert)
+    {
+        if (parent::beforeSave($insert)) {
+			if($this->from_date){
+				$this->from_date = strtotime($this->from_date);
+			}
+			if($this->to_date){
+				$this->to_date = strtotime($this->to_date);
+			}
+            return true;
+        } else {
+            return false;
+        }
+    }
+	
+    /**
+     * @inheritdoc
+     */
+    public function afterFind()
+    {	
+		if($this->from_date){
+			$this->from_date = Yii::$app->formatter->asDate($this->from_date);
+		}
+		if($this->to_date){
+			$this->to_date = Yii::$app->formatter->asDate($this->to_date);
+		}
+        return parent::afterFind();
     }
 
     /**
@@ -74,8 +108,8 @@ class MembershipCustomer extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'membership_id' => 'Membership ID',
-            'customer_id' => 'Customer ID',
+            'membership_id' => 'Membership',
+            'customer_id' => 'Customer',
             'type' => 'Type',
             'from_date' => 'From Date',
             'to_date' => 'To Date',

@@ -16,7 +16,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <p>
-        <?= Html::a('Create Room', ['create'], ['class' => 'btn btn-success']) ?>
+        <?= Html::a('Add Room', ['create'], ['class' => 'btn btn-success']) ?>
     </p>
 
     <?= GridView::widget([
@@ -25,19 +25,26 @@ $this->params['breadcrumbs'][] = $this->title;
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
 
-            'id',
-            'cover_image',
+			[
+				'attribute' => 'coverImageFile',
+				'filter' => false,
+				'value' => function($data){
+					$fileName = ($data->coverImage?$data->coverImage->file_name:"");
+					return \common\components\MediaHelper::getImageUrl($fileName);
+				},
+				'format' => ['image', ['width' => '100']],
+			],
+			[
+				'attribute' => 'type',
+				'value' => function($data){
+					return ($data->roomType?$data->roomType->name:null);
+				},
+			],
             'name',
             'description:ntext',
-            'type',
-            //'charges',
-            //'occupancy',
-            //'beds',
-            //'status',
-            //'created_by',
-            //'updated_by',
-            //'created_at',
-            //'updated_at',
+            'charges',
+            'occupancy',
+            'beds',
 
             ['class' => 'yii\grid\ActionColumn'],
         ],

@@ -2,6 +2,7 @@
 
 use yii\helpers\Html;
 use yii\grid\GridView;
+use common\models\Membership;
 
 /* @var $this yii\web\View */
 /* @var $searchModel common\models\MembershipSearch */
@@ -16,7 +17,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <p>
-        <?= Html::a('Create Membership', ['create'], ['class' => 'btn btn-success']) ?>
+        <?= Html::a('Add Membership', ['create'], ['class' => 'btn btn-success']) ?>
     </p>
 
     <?= GridView::widget([
@@ -25,15 +26,14 @@ $this->params['breadcrumbs'][] = $this->title;
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
 
-            'id',
             'name',
-            'type',
+			[
+				'attribute' => 'type',
+				'value' => function($data){
+					return ($data->type?Membership::$types[$data->type]:null);
+				},
+			],
             'discount',
-            'status',
-            //'created_by',
-            //'updated_by',
-            //'created_at',
-            //'updated_at',
 
             ['class' => 'yii\grid\ActionColumn'],
         ],

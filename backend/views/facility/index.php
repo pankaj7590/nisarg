@@ -25,18 +25,32 @@ $this->params['breadcrumbs'][] = $this->title;
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
 
-            'id',
-            'type',
-            'icon_image',
-            'cover_image',
+			[
+				'attribute' => 'icon_image',
+				'filter' => false,
+				'value' => function($data){
+					$fileName = ($data->iconImage?$data->iconImage->file_name:"");
+					return \common\components\MediaHelper::getImageUrl($fileName);
+				},
+				'format' => ['image', ['width' => '100']],
+			],
+			[
+				'attribute' => 'cover_image',
+				'filter' => false,
+				'value' => function($data){
+					$fileName = ($data->coverImage?$data->coverImage->file_name:"");
+					return \common\components\MediaHelper::getImageUrl($fileName);
+				},
+				'format' => ['image', ['width' => '100']],
+			],
+			[
+				'attribute' => 'type',
+				'value' => function($data){
+					return ($data->facilityType?$data->facilityType->name:null);
+				},
+			],
             'name',
-            //'description:ntext',
             //'charges',
-            //'status',
-            //'created_by',
-            //'updated_by',
-            //'created_at',
-            //'updated_at',
 
             ['class' => 'yii\grid\ActionColumn'],
         ],

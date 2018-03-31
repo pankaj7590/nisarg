@@ -6,7 +6,7 @@ use yii\helpers\Html;
 /* @var $this yii\web\View */
 /* @var $model common\models\FacilityType */
 
-$this->title = 'Create Facility Type';
+$this->title = 'Add Facility Type';
 $this->params['breadcrumbs'][] = ['label' => 'Facility Types', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>

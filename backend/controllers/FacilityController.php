@@ -4,11 +4,13 @@ namespace backend\controllers;
 
 use Yii;
 use common\models\Facility;
+use common\models\FacilityType;
 use common\models\FacilitySearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
+use common\components\MediaUploader;
 
 /**
  * FacilityController implements the CRUD actions for Facility model.
@@ -72,9 +74,33 @@ class FacilityController extends Controller
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
-    public function actionCreate()
+    public function actionCreate($type=null)
     {
         $model = new Facility();
+		if($type){
+			$facilityTypeModel = FacilityType::findOne($type);
+			if(!$facilityTypeModel){
+				throw new NotFoundHttpException('Facility type not found.');
+			}
+			if($facilityTypeModel->coverImage){
+				$duplicatedFile = MediaUploader::duplicateFile($facilityTypeModel->coverImage->file_name, $facilityTypeModel->coverImage);
+				$model->cover_image = $duplicatedFile['media_id'];
+			}
+			if($facilityTypeModel->iconImage){
+				$duplicatedFile = MediaUploader::duplicateFile($facilityTypeModel->iconImage->file_name, $facilityTypeModel->iconImage);
+				$model->icon_image = $duplicatedFile['media_id'];
+			}
+			$model->name = $facilityTypeModel->name;
+			$model->charges = $facilityTypeModel->charges;
+			$model->description = $facilityTypeModel->description;
+			$model->type = $facilityTypeModel->id;
+		}
+
+		$facilityTypeModels = FacilityType::find()->all();
+		$facilityTypes = [];
+		foreach($facilityTypeModels as $facilityType){
+			$facilityTypes[$facilityType->id] = $facilityType->name;
+		}
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
@@ -82,6 +108,7 @@ class FacilityController extends Controller
 
         return $this->render('create', [
             'model' => $model,
+            'facilityTypes' => $facilityTypes,
         ]);
     }
 
@@ -96,12 +123,38 @@ class FacilityController extends Controller
     {
         $model = $this->findModel($id);
 
+		if($type){
+			$facilityTypeModel = FacilityType::findOne($type);
+			if(!$facilityTypeModel){
+				throw new NotFoundHttpException('Facility type not found.');
+			}
+			if($facilityTypeModel->coverImage){
+				$duplicatedFile = MediaUploader::duplicateFile($facilityTypeModel->coverImage->file_name, $facilityTypeModel->coverImage);
+				$model->cover_image = $duplicatedFile['media_id'];
+			}
+			if($facilityTypeModel->iconImage){
+				$duplicatedFile = MediaUploader::duplicateFile($facilityTypeModel->iconImage->file_name, $facilityTypeModel->iconImage);
+				$model->icon_image = $duplicatedFile['media_id'];
+			}
+			$model->name = $facilityTypeModel->name;
+			$model->charges = $facilityTypeModel->charges;
+			$model->description = $facilityTypeModel->description;
+			$model->type = $facilityTypeModel->id;
+		}
+
+		$facilityTypeModels = FacilityType::find()->all();
+		$facilityTypes = [];
+		foreach($facilityTypeModels as $facilityType){
+			$facilityTypes[$facilityType->id] = $facilityType->name;
+		}
+		
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
         }
 
         return $this->render('update', [
             'model' => $model,
+            'facilityTypes' => $facilityTypes,
         ]);
     }
 
