@@ -1,8 +1,6 @@
 <?php
 use yii\web\View;
 use yii\widgets\ActiveForm;
-use kartik\select2\Select2;
-use kartik\datetime\DateTimePicker;
 
 $user = Yii::$app->user;
 $urlManager = Yii::$app->urlManager;

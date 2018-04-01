@@ -92,7 +92,7 @@ $baseUrl = $urlManager->baseUrl;
                                                 <a href="<?= $urlManager->createAbsoluteUrl(['site/gallery'])?>"><span>Gallery</span></a>
                                             </li>
                                             <li>
-                                                <a href="<?= $urlManager->createAbsoluteUrl(['site/booking'])?>"><span>Booking</span></a>
+                                                <a href="<?= $urlManager->createAbsoluteUrl(['booking/create'])?>"><span>Booking</span></a>
                                             </li>
 											<?php if($user->isGuest){?>
 												<li>
