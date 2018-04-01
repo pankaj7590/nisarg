@@ -45,6 +45,7 @@ $baseUrl = $urlManager->baseUrl;
     <link rel='stylesheet' href='http://fonts.googleapis.com/css?family=Patua+One:100,300,400,400italic,700'>
     <link rel='stylesheet' href='http://fonts.googleapis.com/css?family=Playfair+Display:400,400italic,700,700italic'>
     <link rel='stylesheet' href='http://fonts.googleapis.com/css?family=Libre+Baskerville:400,400italic,700,700italic'>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
     <?= Html::csrfMetaTags() ?>
     <title><?= Html::encode($this->title) ?></title>
@@ -153,7 +154,8 @@ $baseUrl = $urlManager->baseUrl;
         <div id="Content">
             <div class="content_wrapper clearfix">
                 <div class="sections_group">
-                    <div class="entry-content">        
+                    <div class="entry-content">
+						<?= Alert::widget() ?>
 						<?= $content ?>
                     </div>
                 </div>

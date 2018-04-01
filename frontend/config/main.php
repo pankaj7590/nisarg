@@ -17,7 +17,7 @@ return [
             'csrfParam' => '_csrf-resort-frontend',
         ],
         'user' => [
-            'identityClass' => 'common\models\User',
+            'identityClass' => 'common\models\Customer',
             'enableAutoLogin' => true,
             'identityCookie' => ['name' => '_identity-resort-frontend', 'httpOnly' => true],
         ],

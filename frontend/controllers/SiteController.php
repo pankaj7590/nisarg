@@ -7,11 +7,14 @@ use yii\web\BadRequestHttpException;
 use yii\web\Controller;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
-use common\models\LoginForm;
+use frontend\models\LoginForm;
 use frontend\models\PasswordResetRequestForm;
 use frontend\models\ResetPasswordForm;
 use frontend\models\SignupForm;
 use frontend\models\ContactForm;
+use common\models\Booking;
+use common\models\RoomType;
+use common\models\Customer;
 
 /**
  * Site controller
@@ -72,7 +75,59 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
-        return $this->render('index');
+		$model = new Booking();
+		$model->detachBehavior('blameable');
+		$model->booking_type = Booking::TYPE_BY_CUSTOMER;
+		if(!Yii::$app->user->isGuest){
+			$customerModel = Yii::$app->user->identity;
+			$model->name = $customerModel->name;
+			$model->surname = $customerModel->surname;
+			$model->phone = $customerModel->phone;
+			$model->email = $customerModel->email;
+			$model->customer_id = $customerModel->id;
+		}
+		
+		$roomTypeModels = RoomType::find()->all();
+		$roomTypes = [];
+		foreach($roomTypeModels as $roomType){
+			$roomTypes[$roomType->id] = $roomType->name;
+		}
+		
+		$transaction = Yii::$app->db->beginTransaction();
+		try{
+			if ($model->load(Yii::$app->request->post())){
+				if(!$model->customer_id){
+					$customerModel = Customer::find()->where(['email' => $model->email])->one();
+					if(!$customerModel){
+						$customerModel = Customer::find()->where(['phone' => $model->phone])->one();
+						if(!$customerModel){
+							$customerModel = new Customer();
+							$customerModel->detachBehavior('blameable');
+							$customerModel->username = str_replace(' ', '', $model->name).'_'.time();
+							$customerModel->name = $model->name;
+							$customerModel->email = $model->email;
+							$customerModel->phone = $model->phone;
+							$customerModel->setPassword($customerModel->phone);
+							$customerModel->generateAuthKey();
+							$customerModel->save();
+						}
+					}
+					$model->customer_id = $customerModel->id;
+				}
+				if($model->save()) {
+					$transaction->commit();
+					return $this->redirect(['view', 'id' => $model->id]);
+				}
+			}
+		}catch(Exception $e){
+			$transaction->rollBack();
+			throw new ServerErrorHttpException('Something went wrong. Please try again.');
+		}
+		
+        return $this->render('index', [
+			'model' => $model,
+			'roomTypes' => $roomTypes,
+		]);
     }
 
     /**

@@ -1,5 +1,9 @@
 <?php
 use yii\web\View;
+use yii\widgets\ActiveForm;
+use kartik\select2\Select2;
+use kartik\datetime\DateTimePicker;
+
 $user = Yii::$app->user;
 $urlManager = Yii::$app->urlManager;
 $baseUrl = $urlManager->baseUrl;
@@ -280,80 +284,54 @@ $this->title = 'Resort';
                                         <div class="column_attr">
 
                                             <div id="contactWrapper">
-                                                <form id="contactform_booking">
+												<?php $form = ActiveForm::begin(["action" => ["booking/create"]]); ?>
                                                     <!-- One Third (1/3) Column -->
                                                     <div class="column one-third">
-                                                        <label>Name</label><span class="wpcf7-form-control-wrap name">
-																<input type="text" id="name" name="name" value="" size="40" aria-required="true" aria-invalid="false" />
-															</span>
+														<?= $form->field($model, 'name')->textInput(['maxlength' => true]) ?>
                                                     </div>
                                                     <!-- One Third (1/3) Column -->
                                                     <div class="column one-third">
-                                                        <label>Surname</label><span class="wpcf7-form-control-wrap surname">
-																<input type="text" id="surname" name="surname" value="" size="40" aria-required="true" aria-invalid="false" />
-															</span>
+														<?= $form->field($model, 'phone')->textInput(['maxlength' => true]) ?>
                                                     </div>
                                                     <!-- One Third (1/3) Column -->
                                                     <div class="column one-third">
-                                                        <label>E-mail</label><span class="wpcf7-form-control-wrap email">
-																<input type="email" id="email" name="email" value="" size="40"  aria-required="true" aria-invalid="false" />
-															</span>
+														<?= $form->field($model, 'email')->textInput(['maxlength' => true]) ?>
                                                     </div>
                                                     <div class="clearfix"></div>
                                                     <!-- One Third (1/3) Column -->
                                                     <div class="column one-third">
-                                                        <label>Arrival</label><span class="wpcf7-form-control-wrap arrival">
-																<input type="text" id="arrival" name="arrival" value="" size="40"  aria-required="true" placeholder="mm/dd/yy" />
-															</span>
+														<?= $form->field($model, 'checkin_date')->textInput(['type' => 'date']); ?>
                                                     </div>
                                                     <!-- One Third (1/3) Column -->
                                                     <div class="column one-third">
-                                                        <label>Departure</label><span class="wpcf7-form-control-wrap departure">
-																<input type="text"  id="departure" name="departure" value="" size="40"  aria-required="true" placeholder="mm/dd/yy" />
-															</span>
+														<?= $form->field($model, 'checkout_date')->textInput(['type' => 'date']); ?>
                                                     </div>
                                                     <!-- One Third (1/3) Column -->
                                                     <div class="column one-third">
-                                                        <label>Room type</label><span class="wpcf7-form-control-wrap room">
-																<select name="room"  id="room"  aria-invalid="false">
-																	<option value="Exclusive room">Exclusive room</option><option value="Family room">Family room</option><option value="Panoramic room">Panoramic room</option><option value="Daily room">Daily room</option>
-																</select></span>
+														<?= $form->field($model, 'room_type')->dropdownList($roomTypes, ['prompt' => 'Select room type...']) ?>
                                                     </div>
                                                     <div class="clearfix"></div>
                                                     <!-- One Third (1/3) Column -->
                                                     <div class="column one-third">
-                                                        <label>Adults<span class="wpcf7-form-control-wrap adults">
-																	<select name="adults"  id="adults"  aria-required="true" aria-invalid="false">
-																		<option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="9">9</option><option value="10">10</option>
-																	</select></span>
-                                                        </label>
+														<?= $form->field($model, 'adults')->textInput() ?>
                                                     </div>
                                                     <!-- One Third (1/3) Column -->
                                                     <div class="column one-third">
-                                                        <label>Children<span class="wpcf7-form-control-wrap children">
-																	<select name="children"  id="children"  aria-required="true" aria-invalid="false">
-																		<option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="9">9</option><option value="10">10</option>
-																	</select></span>
-                                                        </label>
+														<?= $form->field($model, 'children')->textInput() ?>
                                                     </div>
                                                     <!-- One Third (1/3) Column -->
                                                     <div class="column one-third">
-                                                        <label>Rooms<span class="wpcf7-form-control-wrap rooms">
-																	<select name="rooms"  id="rooms" aria-required="true" aria-invalid="false">
-																		<option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="9">9</option><option value="10">10</option>
-																	</select></span>
-                                                        </label>
+														<?= $form->field($model, 'rooms')->textInput() ?>
                                                     </div>
                                                     <div class="clearfix"></div>
                                                     <div class="column one">
-                                                        <label>Message</label><span class="wpcf7-form-control-wrap message"> <textarea name="message"  id="body" cols="40" rows="5"  aria-invalid="false"></textarea></span>
+														<?= $form->field($model, 'message')->textarea(['rows' => 11]) ?>
                                                     </div>
                                                     <div class="clearfix"></div>
                                                     <div class="column one" style="text-align: center;">
-                                                        <input type="button" id="submit" onClick="return check_values_booking();" value="Book your room now" />
+                                                        <input type="submit" value="Book your room now" />
                                                     </div>
-
-                                                </form>
+												<?php ActiveForm::end(); ?>
                                             </div>
 
                                         </div>

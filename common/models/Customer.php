@@ -341,4 +341,20 @@ class Customer extends \yii\db\ActiveRecord implements IdentityInterface
     {
         $this->password_reset_token = null;
     }
+
+    /**
+     * Finds customer by email/mobile
+     *
+     * @param string $email_mobile
+     * @return static|null
+     */
+    public static function findByEmailMobile($email_mobile)
+    {
+		$user = static::findOne(['email' => $email_mobile, 'status' => self::STATUS_ACTIVE]);
+		if($user){
+			return $user;
+		}else{
+			return static::findOne(['phone' => $email_mobile, 'status' => self::STATUS_ACTIVE]);
+		}
+    }
 }

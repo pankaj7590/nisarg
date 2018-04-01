@@ -45,6 +45,7 @@ $baseUrl = $urlManager->baseUrl;
     <link rel='stylesheet' href='http://fonts.googleapis.com/css?family=Patua+One:100,300,400,400italic,700'>
     <link rel='stylesheet' href='http://fonts.googleapis.com/css?family=Playfair+Display:400,400italic,700,700italic'>
     <link rel='stylesheet' href='http://fonts.googleapis.com/css?family=Libre+Baskerville:400,400italic,700,700italic'>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
     <?= Html::csrfMetaTags() ?>
     <title><?= Html::encode($this->title) ?></title>
@@ -77,13 +78,13 @@ $baseUrl = $urlManager->baseUrl;
                                     <nav id="menu">
                                         <ul id="menu-main-menu-left" class="menu menu_left">
                                             <li class="current_page_item">
-                                                <a href="<?= $urlManager->createAbsoluteUrl(['site/index'])?>"><span>Back To Hotel</span></a>
+                                                <a href="<?= $urlManager->createAbsoluteUrl(['site/index'])?>"><span>Go Back</span></a>
                                             </li>
                                             <li>
                                                 <a href="<?= $urlManager->createAbsoluteUrl(['site/my-profile'])?>"><span>My Profile</span></a>
                                             </li>
                                             <li>
-                                                <a href="<?= $urlManager->createAbsoluteUrl(['site/bookings'])?>"><span>Bookings</span></a>
+                                                <a href="<?= $urlManager->createAbsoluteUrl(['booking/index'])?>"><span>My Bookings</span></a>
                                             </li>
                                         </ul>
                                         <ul id="menu-main-menu-right" class="menu menu_right">

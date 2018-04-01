@@ -155,6 +155,7 @@ class BookingController extends Controller
     public function actionUpdate($id, $customer=null)
     {
         $model = $this->findModel($id);
+		$model->booking_type = Booking::TYPE_BY_STAFF;
 		if($customer){
 			$customerModel = Customer::findOne($customer);
 			if(!$customerModel){
@@ -163,6 +164,7 @@ class BookingController extends Controller
 			$model->name = $customerModel->name;
 			$model->surname = $customerModel->surname;
 			$model->email = $customerModel->email;
+			$model->phone = $customerModel->phone;
 			$model->customer_id = $customerModel->id;
 		}
 
@@ -206,7 +208,7 @@ class BookingController extends Controller
 				}
 				if($model->save()) {
 					$transaction->commit();
-					return $this->redirect(['view', 'id' => $model->id]);
+					return $this->redirect(['booking/view', 'id' => $model->id]);
 				}
 			}
 		}catch(Exception $e){

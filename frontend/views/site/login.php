@@ -28,7 +28,7 @@ $this->params['subheader'] = '<div id="Subheader" style="padding:190px 0 100px;"
                                     <div class="column mcb-column one-third column_placeholder">
                                         <div class="placeholder">
 											<?php $form = ActiveForm::begin(['id' => 'login-form']); ?>
-												<?= $form->field($model, 'username')->textInput(['autofocus' => true]) ?>
+												<?= $form->field($model, 'email_mobile')->textInput(['autofocus' => true]) ?>
 												<?= $form->field($model, 'password')->passwordInput() ?>
 												<?= $form->field($model, 'rememberMe')->checkbox() ?>
 												<div style="color:#999;margin:1em 0">
