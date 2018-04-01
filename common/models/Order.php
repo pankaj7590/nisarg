@@ -11,6 +11,7 @@ use yii\behaviors\BlameableBehavior;
  *
  * @property int $id
  * @property int $customer_id
+ * @property int $booking_id
  * @property double $discount
  * @property int $status
  * @property int $created_by
@@ -25,6 +26,18 @@ use yii\behaviors\BlameableBehavior;
  */
 class Order extends \yii\db\ActiveRecord
 {
+	const STATUS_PENDING = 1;
+	const STATUS_ACTIVE = 2;
+	const STATUS_CANCELLED = 3;
+	const STATUS_COMPLETE = 4;
+	
+	public static $statuses = [
+		self::STATUS_PENDING => 'Pending',
+		self::STATUS_ACTIVE => 'Active',
+		self::STATUS_CANCELLED => 'Cancelled',
+		self::STATUS_COMPLETE => 'Complete',
+	];
+	
     /**
      * @inheritdoc
      */
@@ -40,9 +53,11 @@ class Order extends \yii\db\ActiveRecord
     {
         return [
             [['customer_id'], 'required'],
+            [['customer_id', 'booking_id'], 'unique', 'skipOnError' => true, 'targetAttribute' => ['customer_id', 'booking_id']],
             [['customer_id', 'status', 'created_by', 'updated_by', 'created_at', 'updated_at'], 'integer'],
             [['discount'], 'number'],
             [['customer_id'], 'exist', 'skipOnError' => true, 'targetClass' => Customer::className(), 'targetAttribute' => ['customer_id' => 'id']],
+            [['booking_id'], 'exist', 'skipOnError' => true, 'targetClass' => Booking::className(), 'targetAttribute' => ['booking_id' => 'id']],
             [['created_by'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['created_by' => 'id']],
             [['updated_by'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['updated_by' => 'id']],
         ];
@@ -68,13 +83,15 @@ class Order extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'customer_id' => 'Customer ID',
+            'customer_id' => 'Customer',
+            'booking_id' => 'Booking',
             'discount' => 'Discount',
             'status' => 'Status',
             'created_by' => 'Created By',
             'updated_by' => 'Updated By',
             'created_at' => 'Created At',
             'updated_at' => 'Updated At',
+            'nettotal' => 'Net Total',
         ];
     }
 
@@ -84,6 +101,14 @@ class Order extends \yii\db\ActiveRecord
     public function getCustomer()
     {
         return $this->hasOne(Customer::className(), ['id' => 'customer_id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getBooking()
+    {
+        return $this->hasOne(Booking::className(), ['id' => 'booking_id']);
     }
 
     /**
@@ -109,4 +134,12 @@ class Order extends \yii\db\ActiveRecord
     {
         return $this->hasMany(OrderComponent::className(), ['order_id' => 'id']);
     }
+	
+	public function getTotal(){
+		return $this->getOrderComponents()->sum('charges');
+	}
+	
+	public function getNettotal(){
+		return $this->getTotal() - $this->discount;
+	}
 }

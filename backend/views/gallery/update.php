@@ -5,7 +5,7 @@ use yii\helpers\Html;
 /* @var $this yii\web\View */
 /* @var $model common\models\Gallery */
 
-$this->title = 'Update Gallery: {nameAttribute}';
+$this->title = 'Update Gallery: '.$model->name;
 $this->params['breadcrumbs'][] = ['label' => 'Galleries', 'url' => ['index']];
 $this->params['breadcrumbs'][] = ['label' => $model->name, 'url' => ['view', 'id' => $model->id]];
 $this->params['breadcrumbs'][] = 'Update';
@@ -16,6 +16,10 @@ $this->params['breadcrumbs'][] = 'Update';
 
     <?= $this->render('_form', [
         'model' => $model,
+            'rooms' => $rooms,
+            'facilities' => $facilities,
+            'roomTypes' => $roomTypes,
+            'facilityTypes' => $facilityTypes,
     ]) ?>
 
 </div>

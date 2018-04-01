@@ -7,7 +7,9 @@ use yii\grid\GridView;
 /* @var $searchModel common\models\OrderComponentSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Order Components';
+$this->title = 'Order Details';
+$this->params['breadcrumbs'][] = ['label' => 'Orders', 'url' => ['order/index']];
+$this->params['breadcrumbs'][] = ['label' => $searchModel->order_id, 'url' => ['order/view', 'id' => $searchModel->order_id]];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="order-component-index">
@@ -16,7 +18,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <p>
-        <?= Html::a('Create Order Component', ['create'], ['class' => 'btn btn-success']) ?>
+        <?= Html::a('Add New', ['create', 'id' => $searchModel->order_id], ['class' => 'btn btn-success']) ?>
     </p>
 
     <?= GridView::widget([
@@ -25,16 +27,19 @@ $this->params['breadcrumbs'][] = $this->title;
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
 
-            'id',
-            'order_id',
-            'room_id',
-            'facility_id',
+			[
+				'attribute' => 'room_id',
+				'value' => function($data){
+					return ($data->room?$data->room->name:null);
+				},
+			],
+			[
+				'attribute' => 'facility_id',
+				'value' => function($data){
+					return ($data->facility?$data->facility->name:null);
+				},
+			],
             'charges',
-            //'status',
-            //'created_by',
-            //'updated_by',
-            //'created_at',
-            //'updated_at',
 
             ['class' => 'yii\grid\ActionColumn'],
         ],

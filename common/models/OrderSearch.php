@@ -18,7 +18,7 @@ class OrderSearch extends Order
     public function rules()
     {
         return [
-            [['id', 'customer_id', 'status', 'created_by', 'updated_by', 'created_at', 'updated_at'], 'integer'],
+            [['id', 'customer_id', 'booking_id', 'status', 'created_by', 'updated_by', 'created_at', 'updated_at'], 'integer'],
             [['discount'], 'number'],
         ];
     }
@@ -61,6 +61,7 @@ class OrderSearch extends Order
         $query->andFilterWhere([
             'id' => $this->id,
             'customer_id' => $this->customer_id,
+            'booking_id' => $this->booking_id,
             'discount' => $this->discount,
             'status' => $this->status,
             'created_by' => $this->created_by,

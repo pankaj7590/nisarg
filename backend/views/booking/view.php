@@ -16,6 +16,9 @@ $this->params['breadcrumbs'][] = $this->title;
     <h1><?= Html::encode($this->title) ?></h1>
 
     <p>
+		<?php if($model->order){?>
+			<?= Html::a('Order', ['order/view', 'id' => $model->order->id], ['class' => 'btn btn-success']) ?>
+		<?php }?>
         <?= Html::a('Update', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
         <?= Html::a('Delete', ['delete', 'id' => $model->id], [
             'class' => 'btn btn-danger',

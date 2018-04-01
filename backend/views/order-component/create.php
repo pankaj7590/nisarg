@@ -6,8 +6,10 @@ use yii\helpers\Html;
 /* @var $this yii\web\View */
 /* @var $model common\models\OrderComponent */
 
-$this->title = 'Create Order Component';
-$this->params['breadcrumbs'][] = ['label' => 'Order Components', 'url' => ['index']];
+$this->title = 'Add New';
+$this->params['breadcrumbs'][] = ['label' => 'Orders', 'url' => ['order/index']];
+$this->params['breadcrumbs'][] = ['label' => $model->order_id, 'url' => ['order/view', 'id' => $model->order_id]];
+$this->params['breadcrumbs'][] = ['label' => 'Order Details', 'url' => ['index', 'id' => $model->order_id]];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="order-component-create">
@@ -16,6 +18,8 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <?= $this->render('_form', [
         'model' => $model,
+            'rooms' => $rooms,
+            'facilities' => $facilities,
     ]) ?>
 
 </div>

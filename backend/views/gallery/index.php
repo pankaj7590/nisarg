@@ -2,6 +2,7 @@
 
 use yii\helpers\Html;
 use yii\grid\GridView;
+use common\models\Gallery;
 
 /* @var $this yii\web\View */
 /* @var $searchModel common\models\GallerySearch */
@@ -16,7 +17,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <p>
-        <?= Html::a('Create Gallery', ['create'], ['class' => 'btn btn-success']) ?>
+        <?= Html::a('Add Gallery', ['create'], ['class' => 'btn btn-success']) ?>
     </p>
 
     <?= GridView::widget([
@@ -25,19 +26,20 @@ $this->params['breadcrumbs'][] = $this->title;
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
 
-            'id',
             'name',
             'description:ntext',
-            'type',
-            'room_id',
-            //'facility_id',
-            //'room_type_id',
-            //'facility_type_id',
-            //'status',
-            //'created_by',
-            //'updated_by',
-            //'created_at',
-            //'updated_at',
+			[
+				'attribute' => 'type',
+				'value' => function($data){
+					return ($data->type?Gallery::$types[$data->type]:NULL);
+				},
+			],
+			[
+				'attribute' => 'status',
+				'value' => function($data){
+					return ($data->status?Gallery::$statuses[$data->status]:NULL);
+				},
+			],
 
             ['class' => 'yii\grid\ActionColumn'],
         ],

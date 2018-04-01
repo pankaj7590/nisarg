@@ -92,7 +92,7 @@ class BookingController extends Controller
 		$customerModels = Customer::find()->all();
 		$customers = [];
 		foreach($customerModels as $customer){
-			$customers[$customer->id] = $customer->name;
+			$customers[$customer->id] = ($customer->name.'('.$customer->phone.', '.$customer->email.')');
 		}
 		
 		$facilityTypeModels = FacilityType::find()->all();
@@ -107,9 +107,35 @@ class BookingController extends Controller
 			$roomTypes[$roomType->id] = $roomType->name;
 		}
 		
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
-        }
+		$transaction = Yii::$app->db->beginTransaction();
+		try{
+			if ($model->load(Yii::$app->request->post())){
+				if(!$model->customer_id){
+					$customerModel = Customer::find()->where(['email' => $model->email])->one();
+					if(!$customerModel){
+						$customerModel = Customer::find()->where(['phone' => $model->phone])->one();
+						if(!$customerModel){
+							$customerModel = new Customer();
+							$customerModel->username = str_replace(' ', '', $model->name).'_'.time();
+							$customerModel->name = $model->name;
+							$customerModel->email = $model->email;
+							$customerModel->phone = $model->phone;
+							$customerModel->setPassword($customerModel->phone);
+							$customerModel->generateAuthKey();
+							$customerModel->save();
+						}
+					}
+					$model->customer_id = $customerModel->id;
+				}
+				if($model->save()) {
+					$transaction->commit();
+					return $this->redirect(['view', 'id' => $model->id]);
+				}
+			}
+		}catch(Exception $e){
+			$transaction->rollBack();
+			throw new ServerErrorHttpException('Something went wrong. Please try again.');
+		}
 
         return $this->render('create', [
             'model' => $model,
@@ -126,14 +152,24 @@ class BookingController extends Controller
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
      */
-    public function actionUpdate($id)
+    public function actionUpdate($id, $customer=null)
     {
         $model = $this->findModel($id);
+		if($customer){
+			$customerModel = Customer::findOne($customer);
+			if(!$customerModel){
+				throw new NotFoundHttpException('Customer not found.');
+			}
+			$model->name = $customerModel->name;
+			$model->surname = $customerModel->surname;
+			$model->email = $customerModel->email;
+			$model->customer_id = $customerModel->id;
+		}
 
 		$customerModels = Customer::find()->all();
 		$customers = [];
 		foreach($customerModels as $customer){
-			$customers[$customer->id] = $customer->name;
+			$customers[$customer->id] = ($customer->name.'('.$customer->phone.', '.$customer->email.')');
 		}
 		
 		$facilityTypeModels = FacilityType::find()->all();
@@ -148,9 +184,35 @@ class BookingController extends Controller
 			$roomTypes[$roomType->id] = $roomType->name;
 		}
 		
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
-        }
+		$transaction = Yii::$app->db->beginTransaction();
+		try{
+			if ($model->load(Yii::$app->request->post())){
+				if(!$model->customer_id){
+					$customerModel = Customer::find()->where(['email' => $model->email])->one();
+					if(!$customerModel){
+						$customerModel = Customer::find()->where(['phone' => $model->phone])->one();
+						if(!$customerModel){
+							$customerModel = new Customer();
+							$customerModel->username = str_replace(' ', '', $model->name).'_'.time();
+							$customerModel->name = $model->name;
+							$customerModel->email = $model->email;
+							$customerModel->phone = $model->phone;
+							$customerModel->setPassword($customerModel->phone);
+							$customerModel->generateAuthKey();
+							$customerModel->save();
+						}
+					}
+					$model->customer_id = $customerModel->id;
+				}
+				if($model->save()) {
+					$transaction->commit();
+					return $this->redirect(['view', 'id' => $model->id]);
+				}
+			}
+		}catch(Exception $e){
+			$transaction->rollBack();
+			throw new ServerErrorHttpException('Something went wrong. Please try again.');
+		}
 
         return $this->render('update', [
             'model' => $model,

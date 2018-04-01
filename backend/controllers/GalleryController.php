@@ -3,7 +3,12 @@
 namespace backend\controllers;
 
 use Yii;
+use common\models\Room;
+use common\models\Facility;
+use common\models\RoomType;
+use common\models\FacilityType;
 use common\models\Gallery;
+use common\models\GalleryMediaSearch;
 use common\models\GallerySearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -62,8 +67,15 @@ class GalleryController extends Controller
      */
     public function actionView($id)
     {
+		$model = $this->findModel($id);
+        $searchModel = new GalleryMediaSearch();
+		$searchModel->gallery_id = $model->id;
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+		
         return $this->render('view', [
-            'model' => $this->findModel($id),
+            'model' => $model,
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
         ]);
     }
 
@@ -72,9 +84,40 @@ class GalleryController extends Controller
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
-    public function actionCreate()
+    public function actionCreate($type=null)
     {
         $model = new Gallery();
+		
+		if($type){
+			if(!array_key_exists($type, Gallery::$types)){
+				throw new NotFoundHttpException('Gallery type not found.');
+			}
+			$model->type = $type;
+		}
+		
+		$roomModels = Room::find()->all();
+		$rooms = [];
+		foreach($roomModels as $room){
+			$rooms[$room->id] = $room->name;
+		}
+		
+		$facilityModels = Facility::find()->all();
+		$facilities = [];
+		foreach($facilityModels as $facility){
+			$facilities[$facility->id] = $facility->name;
+		}
+		
+		$roomTypeModels = RoomType::find()->all();
+		$roomTypes = [];
+		foreach($roomTypeModels as $roomType){
+			$roomTypes[$roomType->id] = $roomType->name;
+		}
+		
+		$facilityTypeModels = FacilityType::find()->all();
+		$facilityTypes = [];
+		foreach($facilityTypeModels as $facilityType){
+			$facilityTypes[$facilityType->id] = $facilityType->name;
+		}
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
@@ -82,6 +125,10 @@ class GalleryController extends Controller
 
         return $this->render('create', [
             'model' => $model,
+            'rooms' => $rooms,
+            'facilities' => $facilities,
+            'roomTypes' => $roomTypes,
+            'facilityTypes' => $facilityTypes,
         ]);
     }
 
@@ -92,16 +139,51 @@ class GalleryController extends Controller
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
      */
-    public function actionUpdate($id)
+    public function actionUpdate($id,$type=null)
     {
         $model = $this->findModel($id);
 
+		if($type){
+			if(!array_key_exists($type, Gallery::$types)){
+				throw new NotFoundHttpException('Gallery type not found.');
+			}
+			$model->type = $type;
+		}
+		
+		$roomModels = Room::find()->all();
+		$rooms = [];
+		foreach($roomModels as $room){
+			$rooms[$room->id] = $room->name;
+		}
+		
+		$facilityModels = Facility::find()->all();
+		$facilities = [];
+		foreach($facilityModels as $facility){
+			$facilities[$facility->id] = $facility->name;
+		}
+		
+		$roomTypeModels = RoomType::find()->all();
+		$roomTypes = [];
+		foreach($roomTypeModels as $roomType){
+			$roomTypes[$roomType->id] = $roomType->name;
+		}
+		
+		$facilityTypeModels = FacilityType::find()->all();
+		$facilityTypes = [];
+		foreach($facilityTypeModels as $facilityType){
+			$facilityTypes[$facilityType->id] = $facilityType->name;
+		}
+		
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
         }
 
         return $this->render('update', [
             'model' => $model,
+            'rooms' => $rooms,
+            'facilities' => $facilities,
+            'roomTypes' => $roomTypes,
+            'facilityTypes' => $facilityTypes,
         ]);
     }
 

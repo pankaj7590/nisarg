@@ -148,6 +148,15 @@ $baseUrl = Yii::$app->urlManager->baseUrl;
                                         ],
                                     ],
                                     [
+                                        "label" => "Gallery",
+                                        "icon" => "image",
+                                        "url" => "#",
+                                        "items" => [
+                                            ["label" => "Add Gallery", "url" => ["gallery/create"]],
+                                            ["label" => "Manage Galleries", "url" => ["gallery/index"]],
+                                        ],
+                                    ],
+                                    [
                                         "label" => "Settings",
                                         "icon" => "gears",
                                         "url" => "#",

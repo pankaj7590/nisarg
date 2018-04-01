@@ -158,4 +158,9 @@ class Media extends \yii\db\ActiveRecord
     {
         return $this->hasMany(User::className(), ['profile_picture' => 'id']);
     }
+	
+	public function afterDelete(){
+		unlink(\common\components\MediaHelper::getImagePath($this->file_name));
+		return parent::afterDelete();;
+	}
 }

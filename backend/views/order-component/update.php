@@ -5,8 +5,10 @@ use yii\helpers\Html;
 /* @var $this yii\web\View */
 /* @var $model common\models\OrderComponent */
 
-$this->title = 'Update Order Component: {nameAttribute}';
-$this->params['breadcrumbs'][] = ['label' => 'Order Components', 'url' => ['index']];
+$this->title = 'Update Order Detail';
+$this->params['breadcrumbs'][] = ['label' => 'Orders', 'url' => ['order/index']];
+$this->params['breadcrumbs'][] = ['label' => $model->order_id, 'url' => ['order/view', 'id' => $model->order_id]];
+$this->params['breadcrumbs'][] = ['label' => 'Order Details', 'url' => ['index', 'id' => $model->order_id]];
 $this->params['breadcrumbs'][] = ['label' => $model->id, 'url' => ['view', 'id' => $model->id]];
 $this->params['breadcrumbs'][] = 'Update';
 ?>
@@ -16,6 +18,8 @@ $this->params['breadcrumbs'][] = 'Update';
 
     <?= $this->render('_form', [
         'model' => $model,
+            'rooms' => $rooms,
+            'facilities' => $facilities,
     ]) ?>
 
 </div>

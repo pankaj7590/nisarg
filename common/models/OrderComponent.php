@@ -73,9 +73,9 @@ class OrderComponent extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'order_id' => 'Order ID',
-            'room_id' => 'Room ID',
-            'facility_id' => 'Facility ID',
+            'order_id' => 'Order',
+            'room_id' => 'Room',
+            'facility_id' => 'Facility',
             'charges' => 'Charges',
             'status' => 'Status',
             'created_by' => 'Created By',

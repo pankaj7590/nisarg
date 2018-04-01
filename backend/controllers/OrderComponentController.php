@@ -3,6 +3,9 @@
 namespace backend\controllers;
 
 use Yii;
+use common\models\Room;
+use common\models\Facility;
+use common\models\Order;
 use common\models\OrderComponent;
 use common\models\OrderComponentSearch;
 use yii\web\Controller;
@@ -43,9 +46,12 @@ class OrderComponentController extends Controller
      * Lists all OrderComponent models.
      * @return mixed
      */
-    public function actionIndex()
+    public function actionIndex($id)
     {
+		$orderModel = $this->findOrderModel($id);
+		
         $searchModel = new OrderComponentSearch();
+		$searchModel->order_id = $orderModel->id;
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
@@ -72,9 +78,24 @@ class OrderComponentController extends Controller
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
-    public function actionCreate()
+    public function actionCreate($id)
     {
+		$orderModel = $this->findOrderModel($id);
+		
         $model = new OrderComponent();
+		$model->order_id = $orderModel->id;
+		
+		$roomModels = Room::find()->all();
+		$rooms = [];
+		foreach($roomModels as $room){
+			$rooms[$room->id] = $room->name;
+		}
+		
+		$facilityModels = Facility::find()->all();
+		$facilities = [];
+		foreach($facilityModels as $facility){
+			$facilities[$facility->id] = $facility->name;
+		}
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
@@ -82,6 +103,8 @@ class OrderComponentController extends Controller
 
         return $this->render('create', [
             'model' => $model,
+            'rooms' => $rooms,
+            'facilities' => $facilities,
         ]);
     }
 
@@ -96,12 +119,26 @@ class OrderComponentController extends Controller
     {
         $model = $this->findModel($id);
 
+		$roomModels = Room::find()->all();
+		$rooms = [];
+		foreach($roomModels as $room){
+			$rooms[$room->id] = $room->name;
+		}
+		
+		$facilityModels = Facility::find()->all();
+		$facilities = [];
+		foreach($facilityModels as $facility){
+			$facilities[$facility->id] = $facility->name;
+		}
+		
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
         }
 
         return $this->render('update', [
             'model' => $model,
+            'rooms' => $rooms,
+            'facilities' => $facilities,
         ]);
     }
 
@@ -133,5 +170,21 @@ class OrderComponentController extends Controller
         }
 
         throw new NotFoundHttpException('The requested page does not exist.');
+    }
+
+    /**
+     * Finds the Order model based on its primary key value.
+     * If the model is not found, a 404 HTTP exception will be thrown.
+     * @param integer $id
+     * @return OrderComponent the loaded model
+     * @throws NotFoundHttpException if the model cannot be found
+     */
+    protected function findOrderModel($id)
+    {
+        if (($model = Order::findOne($id)) !== null) {
+            return $model;
+        }
+
+        throw new NotFoundHttpException('The requested order does not exist.');
     }
 }

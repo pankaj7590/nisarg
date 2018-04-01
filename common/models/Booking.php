@@ -68,7 +68,7 @@ class Booking extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['customer_id', 'name', 'phone'], 'required'],
+            [['name', 'phone'], 'required'],
             [['customer_id', 'booking_type', 'room_type', 'facility_type', 'adults', 'children', 'rooms', 'status', 'created_by', 'updated_by', 'created_at', 'updated_at'], 'integer'],
             [['message'], 'string'],
             [['checkin_date', 'checkout_date'], 'safe'],
@@ -99,6 +99,17 @@ class Booking extends \yii\db\ActiveRecord
             return false;
         }
     }
+	
+	public function afterSave($insert, $changedAttributes){
+		if(array_key_exists('status', $changedAttributes) && $this->status == self::STATUS_CONFIRMED){
+			$orderModel = new Order();
+			$orderModel->customer_id = $this->customer_id;
+			$orderModel->booking_id = $this->id;
+			$orderModel->status = Order::STATUS_PENDING;
+			$orderModel->save();
+		}
+		return parent::afterSave($insert, $changedAttributes);
+	}
 	
     /**
      * @inheritdoc
@@ -153,6 +164,14 @@ class Booking extends \yii\db\ActiveRecord
             'created_at' => 'Created At',
             'updated_at' => 'Updated At',
         ];
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getOrder()
+    {
+        return $this->hasOne(Order::className(), ['booking_id' => 'id']);
     }
 
     /**

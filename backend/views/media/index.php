@@ -25,15 +25,18 @@ $this->params['breadcrumbs'][] = $this->title;
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
 
-            'id',
-            'media_type',
+			[
+				'attribute' => 'file_name',
+				'filter' => false,
+				'value' => function($data){
+					$fileName = ($data->file_name?$data->file_name:"");
+					return \common\components\MediaHelper::getImageUrl($fileName);
+				},
+				'format' => ['image', ['width' => '100']],
+			],
             'alt',
-            'file_name',
             'file_type',
-            //'file_size',
-            //'status',
-            //'created_at',
-            //'updated_at',
+            'file_size',
 
             ['class' => 'yii\grid\ActionColumn'],
         ],

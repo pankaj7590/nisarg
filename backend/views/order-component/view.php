@@ -7,7 +7,9 @@ use yii\widgets\DetailView;
 /* @var $model common\models\OrderComponent */
 
 $this->title = $model->id;
-$this->params['breadcrumbs'][] = ['label' => 'Order Components', 'url' => ['index']];
+$this->params['breadcrumbs'][] = ['label' => 'Orders', 'url' => ['order/index']];
+$this->params['breadcrumbs'][] = ['label' => $model->order_id, 'url' => ['order/view', 'id' => $model->order_id]];
+$this->params['breadcrumbs'][] = ['label' => 'Order Details', 'url' => ['index', 'id' => $model->order_id]];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="order-component-view">
@@ -28,16 +30,34 @@ $this->params['breadcrumbs'][] = $this->title;
     <?= DetailView::widget([
         'model' => $model,
         'attributes' => [
-            'id',
-            'order_id',
-            'room_id',
-            'facility_id',
+			[
+				'attribute' => 'room_id',
+				'value' => function($data){
+					return ($data->room?$data->room->name:null);
+				},
+			],
+			[
+				'attribute' => 'facility_id',
+				'value' => function($data){
+					return ($data->facility?$data->facility->name:null);
+				},
+			],
             'charges',
             'status',
-            'created_by',
-            'updated_by',
-            'created_at',
-            'updated_at',
+			[
+				'attribute' => 'created_by',
+				'value' => function($data){
+					return ($data->createdBy?$data->createdBy->name:null);
+				},
+			],
+			[
+				'attribute' => 'updated_by',
+				'value' => function($data){
+					return ($data->updatedBy?$data->updatedBy->name:null);
+				},
+			],
+            'created_at:datetime',
+            'updated_at:datetime',
         ],
     ]) ?>
 
