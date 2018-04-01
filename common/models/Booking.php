@@ -37,6 +37,23 @@ use yii\behaviors\BlameableBehavior;
  */
 class Booking extends \yii\db\ActiveRecord
 {
+	const STATUS_REQUESTED = 1;
+	const STATUS_CONFIRMED = 2;
+	const STATUS_CANCELLED = 3;
+	
+	public static $statuses = [
+		self::STATUS_REQUESTED => 'Requested',
+		self::STATUS_CONFIRMED => 'Confirmed',
+		self::STATUS_CANCELLED => 'Cancelled',
+	];
+	
+	const TYPE_BY_CUSTOMER = 1;
+	const TYPE_BY_STAFF = 2;
+	
+	public static $types = [
+		self::TYPE_BY_CUSTOMER => 'By Customer',
+		self::TYPE_BY_STAFF => 'By Staff',
+	];
     /**
      * @inheritdoc
      */
@@ -51,9 +68,11 @@ class Booking extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['customer_id', 'name', 'surname'], 'required'],
-            [['customer_id', 'checkin_date', 'checkout_date', 'booking_type', 'room_type', 'facility_type', 'adults', 'children', 'rooms', 'status', 'created_by', 'updated_by', 'created_at', 'updated_at'], 'integer'],
+            [['customer_id', 'name', 'phone'], 'required'],
+            [['customer_id', 'booking_type', 'room_type', 'facility_type', 'adults', 'children', 'rooms', 'status', 'created_by', 'updated_by', 'created_at', 'updated_at'], 'integer'],
             [['message'], 'string'],
+            [['checkin_date', 'checkout_date'], 'safe'],
+            [['phone'], 'string', 'max' => 15],
             [['name', 'surname', 'email'], 'string', 'max' => 255],
             [['customer_id'], 'exist', 'skipOnError' => true, 'targetClass' => Customer::className(), 'targetAttribute' => ['customer_id' => 'id']],
             [['facility_type'], 'exist', 'skipOnError' => true, 'targetClass' => FacilityType::className(), 'targetAttribute' => ['facility_type' => 'id']],
@@ -61,6 +80,38 @@ class Booking extends \yii\db\ActiveRecord
             [['created_by'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['created_by' => 'id']],
             [['updated_by'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['updated_by' => 'id']],
         ];
+    }
+	
+    /**
+     * @inheritdoc
+     */
+    public function beforeSave($insert)
+    {
+        if (parent::beforeSave($insert)) {
+			if($this->checkin_date){
+				$this->checkin_date = strtotime($this->checkin_date);
+			}
+			if($this->checkout_date){
+				$this->checkout_date = strtotime($this->checkout_date);
+			}
+            return true;
+        } else {
+            return false;
+        }
+    }
+	
+    /**
+     * @inheritdoc
+     */
+    public function afterFind()
+    {	
+		if($this->checkin_date){
+			$this->checkin_date = Yii::$app->formatter->asDate($this->checkin_date);
+		}
+		if($this->checkout_date){
+			$this->checkout_date = Yii::$app->formatter->asDate($this->checkout_date);
+		}
+        return parent::afterFind();
     }
 
     /**
@@ -83,7 +134,7 @@ class Booking extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'customer_id' => 'Customer ID',
+            'customer_id' => 'Customer',
             'name' => 'Name',
             'surname' => 'Surname',
             'email' => 'Email',

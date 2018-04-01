@@ -19,7 +19,7 @@ class BookingSearch extends Booking
     {
         return [
             [['id', 'customer_id', 'checkin_date', 'checkout_date', 'booking_type', 'room_type', 'facility_type', 'adults', 'children', 'rooms', 'status', 'created_by', 'updated_by', 'created_at', 'updated_at'], 'integer'],
-            [['name', 'surname', 'email', 'message'], 'safe'],
+            [['name', 'surname', 'email', 'message', 'phone'], 'safe'],
         ];
     }
 
@@ -79,6 +79,7 @@ class BookingSearch extends Booking
         $query->andFilterWhere(['like', 'name', $this->name])
             ->andFilterWhere(['like', 'surname', $this->surname])
             ->andFilterWhere(['like', 'email', $this->email])
+            ->andFilterWhere(['like', 'phone', $this->phone])
             ->andFilterWhere(['like', 'message', $this->message]);
 
         return $dataProvider;

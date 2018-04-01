@@ -2,6 +2,7 @@
 
 use yii\helpers\Html;
 use yii\widgets\DetailView;
+use common\models\Booking;
 
 /* @var $this yii\web\View */
 /* @var $model common\models\Booking */
@@ -28,25 +29,53 @@ $this->params['breadcrumbs'][] = $this->title;
     <?= DetailView::widget([
         'model' => $model,
         'attributes' => [
-            'id',
-            'customer_id',
             'name',
-            'surname',
+            'phone',
             'email:email',
-            'checkin_date',
-            'checkout_date',
-            'booking_type',
-            'room_type',
-            'facility_type',
+            'checkin_date:date',
+            'checkout_date:date',
+			[
+				'attribute' => 'booking_type',
+				'value' => function($data){
+					return ($data->booking_type?Booking::$booking_types[$data->booking_type]:null);
+				},
+			],
+			[
+				'attribute' => 'room_type',
+				'value' => function($data){
+					return ($data->roomType?$data->roomType->name:null);
+				},
+			],
+			[
+				'attribute' => 'facility_type',
+				'value' => function($data){
+					return ($data->facilityType?$data->facilityType->name:null);
+				},
+			],
             'adults',
             'children',
             'rooms',
             'message:ntext',
-            'status',
-            'created_by',
-            'updated_by',
-            'created_at',
-            'updated_at',
+			[
+				'attribute' => 'status',
+				'value' => function($data){
+					return ($data->status?Booking::$statuses[$data->status]:null);
+				},
+			],
+			[
+				'attribute' => 'created_by',
+				'value' => function($data){
+					return ($data->createdBy?$data->createdBy->name:null);
+				},
+			],
+			[
+				'attribute' => 'updated_by',
+				'value' => function($data){
+					return ($data->updatedBy?$data->updatedBy->name:null);
+				},
+			],
+            'created_at:datetime',
+            'updated_at:datetime',
         ],
     ]) ?>
 

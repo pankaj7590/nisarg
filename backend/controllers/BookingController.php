@@ -3,6 +3,9 @@
 namespace backend\controllers;
 
 use Yii;
+use common\models\FacilityType;
+use common\models\RoomType;
+use common\models\Customer;
 use common\models\Booking;
 use common\models\BookingSearch;
 use yii\web\Controller;
@@ -72,16 +75,47 @@ class BookingController extends Controller
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
-    public function actionCreate()
+    public function actionCreate($customer=null)
     {
         $model = new Booking();
+		if($customer){
+			$customerModel = Customer::findOne($customer);
+			if(!$customerModel){
+				throw new NotFoundHttpException('Customer not found.');
+			}
+			$model->name = $customerModel->name;
+			$model->surname = $customerModel->surname;
+			$model->email = $customerModel->email;
+			$model->customer_id = $customerModel->id;
+		}
 
+		$customerModels = Customer::find()->all();
+		$customers = [];
+		foreach($customerModels as $customer){
+			$customers[$customer->id] = $customer->name;
+		}
+		
+		$facilityTypeModels = FacilityType::find()->all();
+		$facilityTypes = [];
+		foreach($facilityTypeModels as $facilityType){
+			$facilityTypes[$facilityType->id] = $facilityType->name;
+		}
+		
+		$roomTypeModels = RoomType::find()->all();
+		$roomTypes = [];
+		foreach($roomTypeModels as $roomType){
+			$roomTypes[$roomType->id] = $roomType->name;
+		}
+		
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
         }
 
         return $this->render('create', [
             'model' => $model,
+            'customers' => $customers,
+            'facilityTypes' => $facilityTypes,
+            'roomTypes' => $roomTypes,
         ]);
     }
 
@@ -96,12 +130,33 @@ class BookingController extends Controller
     {
         $model = $this->findModel($id);
 
+		$customerModels = Customer::find()->all();
+		$customers = [];
+		foreach($customerModels as $customer){
+			$customers[$customer->id] = $customer->name;
+		}
+		
+		$facilityTypeModels = FacilityType::find()->all();
+		$facilityTypes = [];
+		foreach($facilityTypeModels as $facilityType){
+			$facilityTypes[$facilityType->id] = $facilityType->name;
+		}
+		
+		$roomTypeModels = RoomType::find()->all();
+		$roomTypes = [];
+		foreach($roomTypeModels as $roomType){
+			$roomTypes[$roomType->id] = $roomType->name;
+		}
+		
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
         }
 
         return $this->render('update', [
             'model' => $model,
+            'customers' => $customers,
+            'facilityTypes' => $facilityTypes,
+            'roomTypes' => $roomTypes,
         ]);
     }
 
