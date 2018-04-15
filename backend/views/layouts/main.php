@@ -161,6 +161,7 @@ $baseUrl = Yii::$app->urlManager->baseUrl;
                                         "icon" => "gears",
                                         "url" => "#",
                                         "items" => [
+                                            ["label" => "Theme Options", "url" => ["setting/theme-options"]],
                                             ["label" => "Add Setting", "url" => ["setting/create"]],
                                             ["label" => "Manage Settings", "url" => ["setting/index"]],
                                         ],

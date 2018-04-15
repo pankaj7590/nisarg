@@ -4,6 +4,7 @@ namespace frontend\controllers;
 use Yii;
 use yii\base\InvalidParamException;
 use yii\web\BadRequestHttpException;
+use yii\web\ServerErrorHttpException;
 use yii\web\Controller;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
@@ -93,6 +94,9 @@ class SiteController extends Controller
 			$roomTypes[$roomType->id] = $roomType->name;
 		}
 		
+		$contactModel = new ContactForm();
+		$contactModel->detachBehavior('blameable');
+		
 		$transaction = Yii::$app->db->beginTransaction();
 		try{
 			if ($model->load(Yii::$app->request->post())){
@@ -126,6 +130,7 @@ class SiteController extends Controller
 		
         return $this->render('index', [
 			'model' => $model,
+			'contactModel' => $contactModel,
 			'roomTypes' => $roomTypes,
 		]);
     }
@@ -224,18 +229,11 @@ class SiteController extends Controller
     {
         $model = new ContactForm();
         if ($model->load(Yii::$app->request->post()) && $model->validate()) {
-            if ($model->sendEmail(Yii::$app->params['adminEmail'])) {
-                Yii::$app->session->setFlash('success', 'Thank you for contacting us. We will respond to you as soon as possible.');
-            } else {
-                Yii::$app->session->setFlash('error', 'There was an error sending your message.');
+            if (!$model->sendEmail(Yii::$app->params['adminEmail'])) {
+				throw new ServerErrorHttpException('Email not sent.');
             }
-
-            return $this->refresh();
-        } else {
-            return $this->render('contact', [
-                'model' => $model,
-            ]);
         }
+		return $this->redirect(['index']);
     }
 
     /**

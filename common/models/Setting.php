@@ -25,6 +25,20 @@ use yii\behaviors\BlameableBehavior;
  */
 class Setting extends \yii\db\ActiveRecord
 {
+	const GROUP_HEADER = 1;
+	const GROUP_FOOTER = 2;
+	const GROUP_HOME = 3;
+	const GROUP_ABOUT = 4;
+	const GROUP_GALLERY = 5;
+	
+	public static $groups = [
+		self::GROUP_HEADER => 'Header',
+		self::GROUP_FOOTER => 'Footer',
+		self::GROUP_HOME => 'Home',
+		self::GROUP_ABOUT => 'About',
+		self::GROUP_GALLERY => 'Gallery',
+	];
+	
     /**
      * @inheritdoc
      */
@@ -96,4 +110,8 @@ class Setting extends \yii\db\ActiveRecord
     {
         return $this->hasOne(User::className(), ['id' => 'updated_by']);
     }
+	
+	public function getMedia(){
+		return $this->hasOne(Media::className(), ['id' => 'value']);
+	}
 }

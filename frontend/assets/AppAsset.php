@@ -20,7 +20,7 @@ class AppAsset extends AssetBundle
 		'plugins/rs-plugin/css/settings.css',
     ];
     public $js = [
-		'js/jquery-2.1.4.min.js',
+		// 'js/jquery-2.1.4.min.js',
 		'js/mfn.menu.js',
 		'js/jquery.plugins.js',
 		'js/jquery.jplayer.min.js',

@@ -4,6 +4,8 @@ namespace frontend\models;
 
 use Yii;
 use yii\base\Model;
+use common\models\Feedback;
+use yii\web\ServerErrorHttpException;
 
 /**
  * ContactForm is the model behind the contact form.
@@ -50,11 +52,27 @@ class ContactForm extends Model
      */
     public function sendEmail($email)
     {
-        return Yii::$app->mailer->compose()
-            ->setTo($email)
-            ->setFrom([$this->email => $this->name])
-            ->setSubject($this->subject)
-            ->setTextBody($this->body)
-            ->send();
+		$transaction = Yii::$app->db->beginTransaction();
+		try{
+			$model = new Feedback();
+			$model->feedback_type = Feedback::TYPE_CONTACT;
+			$model->name = $this->name;
+			$model->email = $this->email;
+			$model->message = $this->body;
+			if(!$model->save(false)){
+				throw new ServerErrorHttpException('Contact not saved. Please try again.');
+			}
+			$transaction->commit();
+
+			return Yii::$app->mailer->compose()
+				->setTo($email)
+				->setFrom([$this->email => $this->name])
+				->setSubject($this->subject)
+				->setTextBody($this->body)
+				->send();
+		}catch(Exception $e){
+			$transaction->rollBack();
+			throw new ServerErrorHttpException('Contact not saved. Please try again.');
+		}
     }
 }

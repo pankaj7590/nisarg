@@ -2,6 +2,7 @@
 
 use yii\helpers\Html;
 use yii\grid\GridView;
+use common\models\Setting;
 
 /* @var $this yii\web\View */
 /* @var $searchModel common\models\SettingSearch */
@@ -25,10 +26,15 @@ $this->params['breadcrumbs'][] = $this->title;
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
 
+			[
+				'attribute' => 'setting_group',
+				'filter' => Setting::$groups,
+				'value' => function($data){
+					return ($data->setting_group?Setting::$groups[$data->setting_group]:NULL);
+				},
+			],
             'name',
             'label',
-            'default_value:ntext',
-            'value:ntext',
 
             ['class' => 'yii\grid\ActionColumn'],
         ],

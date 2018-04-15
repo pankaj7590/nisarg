@@ -45,6 +45,13 @@ return [
             ],
         ],
         */
+		'assetManager' => [
+			'bundles' => [
+				'yii\web\JqueryAsset' => [
+					'sourcePath' => null, 'js' => ['js/jquery-2.1.4.min.js'],
+				],
+			],
+		],
     ],
     'params' => $params,
 ];
