@@ -16,6 +16,7 @@ use frontend\models\ContactForm;
 use common\models\Booking;
 use common\models\RoomType;
 use common\models\Customer;
+use common\models\Room;
 
 /**
  * Site controller
@@ -152,7 +153,13 @@ class SiteController extends Controller
      */
     public function actionRooms()
     {
-        return $this->render('rooms');
+		$totalRooms = Room::find()->count();
+		$roomTypeModels = RoomType::find()->all();
+		
+        return $this->render('rooms', [
+			'total_rooms' => $totalRooms,
+			'room_type_models' => $roomTypeModels,
+		]);
     }
 
     /**
