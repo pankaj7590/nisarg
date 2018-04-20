@@ -9,12 +9,68 @@ use yii\bootstrap\NavBar;
 use yii\widgets\Breadcrumbs;
 use frontend\assets\AppAsset;
 use common\widgets\Alert;
+use common\models\Setting;
+use common\models\Media;
+use common\components\MediaHelper;
 
 AppAsset::register($this);
 
 $user = Yii::$app->user;
 $urlManager = Yii::$app->urlManager;
 $baseUrl = $urlManager->baseUrl;
+
+//HEADER THEME OPTIONS
+$headerOptionModels = Setting::find()->where(['setting_group' => Setting::GROUP_HEADER])->all();
+$headerOptions = [];
+foreach($headerOptionModels as $model){
+	$headerOptions[$model->name] = $model;
+}
+$facebook = $headerOptions['facebook']['value'];
+$twitter = $headerOptions['twitter']['value'];
+$gplus = $headerOptions['gplus']['value'];
+$pinterest = $headerOptions['pinterest']['value'];
+$instagram = $headerOptions['instagram']['value'];
+$header_phone = $headerOptions['header_phone']['value'];
+$header_email = $headerOptions['header_email']['value'];
+$menu_bar_logo = $headerOptions['menu_bar_logo'];
+if($menu_bar_logo->media){
+	$logoUrl = MediaHelper::getImageUrl($menu_bar_logo->media->file_name);
+}else{
+	$logoUrl = $baseUrl.'/images/hotel2.png';
+}
+
+//HOME PAGE THEME OPTIONS
+$homeOptionModels = Setting::find()->where(['setting_group' => Setting::GROUP_HOME])->all();
+$homeOptions = [];
+foreach($homeOptionModels as $model){
+	$homeOptions[$model->name] = $model;
+}
+$slider_images = $homeOptions['slider_images']['value'];
+$slider_images_arr = [];
+if($slider_images){
+	$temp = json_decode($slider_images);
+	foreach($temp as $media){
+		$mediaModel = Media::findOne($media);
+		if($mediaModel){
+			$slider_images_arr[] = MediaHelper::getImageUrl($mediaModel->file_name);
+		}
+	}
+}
+$slider_text = $homeOptions['slider_text']['value'];
+
+//FOOTER THEME OPTIONS
+$footerOptionModels = Setting::find()->where(['setting_group' => Setting::GROUP_FOOTER])->all();
+$footerOptions = [];
+foreach($footerOptionModels as $model){
+	$footerOptions[$model->name] = $model;
+}
+$footer_copyright = $footerOptions['footer_copyright']['value'];
+$footer_icon = $footerOptions['footer_icon'];
+if($footer_icon->media){
+	$iconUrl = MediaHelper::getImageUrl($footer_icon->media->file_name);
+}else{
+	$iconUrl = $baseUrl.'/images/home_hotel2_logo_footer.png';
+}
 ?>
 <?php $this->beginPage() ?>
 <!DOCTYPE html>
@@ -38,7 +94,7 @@ $baseUrl = $urlManager->baseUrl;
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
     <!-- Favicons -->
-    <link rel="shortcut icon" href="content/hotel2/images/favicon.ico">
+    <link rel="shortcut icon" href="<?= ($logoUrl?$logoUrl:'/images/hotel2.png')?>">
 
     <!-- FONTS -->
     <link rel='stylesheet' href='http://fonts.googleapis.com/css?family=Roboto:100,300,400,400italic,700'>
@@ -70,7 +126,7 @@ $baseUrl = $urlManager->baseUrl;
                             <div class="top_bar_left clearfix">
                                 <!-- Logo-->
                                 <div class="logo">
-                                    <a id="logo" href="<?= $baseUrl;?>/index-hotel2.html" title="BeHotel2 - BeTheme"> <img class="scale-with-grid" src="<?= $baseUrl;?>/images/hotel2.png" alt="BeHotel2 - BeTheme" />
+                                    <a id="logo" href="<?= $urlManager->createAbsoluteUrl(['site/index']);?>" title="Nisarg Resort"> <img class="scale-with-grid" src="<?= ($logoUrl?$logoUrl:'/images/hotel2.png')?>" alt="Nisarg Resort" />
                                     </a>
                                 </div>
                                 <!-- Main menu-->
@@ -129,16 +185,15 @@ $baseUrl = $urlManager->baseUrl;
                     <div id="rev_slider_1_2_wrapper" class="rev_slider_wrapper fullwidthbanner-container" style="margin:0px auto;background-color:transparent;padding:0px;margin-top:0px;margin-bottom:0px;">
                         <div id="rev_slider_1_2" class="rev_slider fullwidthabanner" data-version="5.1.1">
                             <ul>
-                                <li data-index="rs-1" data-transition="fade" data-slotamount="default" data-easein="default" data-easeout="default" data-masterspeed="500" data-rotate="0" data-saveperformance="off" data-title="Slide" data-description="">
-                                    <img src="<?= $baseUrl;?>/images/home_hotel2_slider1.jpg" alt="" width="1920" height="800" data-bgposition="center center" data-bgfit="cover" data-bgrepeat="no-repeat" class="rev-slidebg" data-no-retina>
-                                </li>
-                                <li data-index="rs-2" data-transition="fade" data-slotamount="default" data-easein="default" data-easeout="default" data-masterspeed="500" data-rotate="0" data-saveperformance="off" data-title="Slide" data-description="">
-                                    <img src="<?= $baseUrl;?>/images/home_hotel2_slider3.jpg" alt="" width="1920" height="800" data-bgposition="center center" data-bgfit="cover" data-bgrepeat="no-repeat" class="rev-slidebg" data-no-retina>
-                                </li>
+								<?php foreach($slider_images_arr as $key => $slider_image){?>
+									<li data-index="rs-<?= $key?>" data-transition="fade" data-slotamount="default" data-easein="default" data-easeout="default" data-masterspeed="500" data-rotate="0" data-saveperformance="off" data-title="Slide" data-description="">
+										<img src="<?= $slider_image;?>" alt="" width="1920" height="800" data-bgposition="center center" data-bgfit="cover" data-bgrepeat="no-repeat" class="rev-slidebg" data-no-retina>
+									</li>
+								<?php }?>
                             </ul>
                             <div class="tp-static-layers">
                                 <div class="tp-caption Fashion-BigDisplay tp-resizeme tp-static-layer" id="slide-1-layer-1" data-x="center" data-hoffset="" data-y="bottom" data-voffset="90" data-width="['auto']" data-height="['auto']" data-transform_idle="o:1;" data-transform_in="z:0;rX:0;rY:0;rZ:0;sX:0.8;sY:0.8;skX:0;skY:0;opacity:0;s:1500;e:Power4.easeOut;" data-transform_out="opacity:0;s:300;s:300;" data-start="500" data-splitin="none" data-splitout="none" data-responsive_offset="on" data-startslide="0" data-endslide="1" style="z-index: 5; white-space: nowrap; font-size: 73px; line-height: 73px; font-weight: 400; color: rgba(255, 255, 255, 1.00);font-family:Playfair Display;text-align:center;font-style:italic;">
-                                    It's where dreams come true
+                                    <?= $slider_text?>
                                 </div>
                             </div>
                             <div class="tp-bannertimer tp-bottom flv_viz_hid"></div>
@@ -170,8 +225,7 @@ $baseUrl = $urlManager->baseUrl;
                         <aside class="widget widget_text">
                             <div class="textwidget">
                                 <div class="image_frame image_item no_link scale-with-grid aligncenter no_border">
-                                    <div class="image_wrapper"><img class="scale-with-grid" src="<?= $baseUrl;?>/images/home_hotel2_logo_footer.png" alt="" width="60" height="47" />
-                                    </div>
+                                    <div class="image_wrapper"><img class="scale-with-grid" src="<?= ($iconUrl)?>" alt="" width="60" height="47" /></div>
                                 </div>
                             </div>
                         </aside>
@@ -183,10 +237,16 @@ $baseUrl = $urlManager->baseUrl;
                 <div class="container">
                     <div class="column one">
                         <div class="copyright">
-                            &copy; <?= date('Y') ?> <?= Html::encode(Yii::$app->name) ?></a>
+                            &copy; <?= date('Y') ?> <?= ($footer_copyright?$footer_copyright:Html::encode(Yii::$app->name)) ?>
                         </div>
                         <!--Social info area-->
-                        <ul class="social"></ul>
+                        <ul class="social">
+							<li><a href="<?= $facebook?>"><i class="fa fa-facebook-square fa-2x"></i></a></li>
+							<li><a href="<?= $twitter?>"><i class="fa fa-twitter fa-2x"></i></a></li>
+							<li><a href="<?= $gplus?>"><i class="fa fa-google-plus fa-2x"></i></a></li>
+							<li><a href="<?= $pinterest?>"><i class="fa fa-pinterest fa-2x"></i></a></li>
+							<li><a href="<?= $instagram?>"><i class="fa fa-instagram fa-2x"></i></a></li>
+						</ul>
                     </div>
                 </div>
             </div>

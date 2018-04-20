@@ -40,7 +40,7 @@ $this->params['breadcrumbs'][] = $this->title;
 			[
 				'attribute' => 'booking_type',
 				'value' => function($data){
-					return ($data->booking_type?Booking::$booking_types[$data->booking_type]:null);
+					return ($data->booking_type?Booking::$types[$data->booking_type]:null);
 				},
 			],
 			[

@@ -1,17 +1,53 @@
 <?php
 use yii\web\View;
+use common\models\Setting;
+use common\models\Media;
+use common\components\MediaHelper;
+
 $user = Yii::$app->user;
 $urlManager = Yii::$app->urlManager;
 $baseUrl = $urlManager->baseUrl;
+		
+$aboutUsOptionModels = Setting::find()->where(['setting_group' => Setting::GROUP_ABOUT])->all();
+$aboutUsOptions = [];
+foreach($aboutUsOptionModels as $model){
+	$aboutUsOptions[$model->name] = $model;
+}
+$about_title = $aboutUsOptions['about_title']['value'];
+$about_page_content_title = $aboutUsOptions['about_page_content_title']['value'];
+$about_page_content_subtitle = $aboutUsOptions['about_page_content_subtitle']['value'];
+$about_page_content_content = $aboutUsOptions['about_page_content_content']['value'];
+$about_page_second_section_title = $aboutUsOptions['about_page_second_section_title']['value'];
+$about_page_second_section_subtitle = $aboutUsOptions['about_page_second_section_subtitle']['value'];
+$about_page_second_section_content = $aboutUsOptions['about_page_second_section_content']['value'];
+$about_page_image_1 = $aboutUsOptions['about_page_image_1'];
+if($about_page_image_1->media){
+	$about_page_image_1_url = MediaHelper::getImageUrl($about_page_image_1->media->file_name);
+}else{
+	$about_page_image_1_url = $baseUrl.'/images/home_hotel2_about1.png';
+}
+$about_page_image_2 = $aboutUsOptions['about_page_image_2'];
+if($about_page_image_2->media){
+	$about_page_image_2_url = MediaHelper::getImageUrl($about_page_image_2->media->file_name);
+}else{
+	$about_page_image_2_url = $baseUrl.'/images/home_hotel2_about2.png';
+}
+$about_page_second_section_icon = $aboutUsOptions['about_page_second_section_icon'];
+if($about_page_second_section_icon->media){
+	$about_page_second_section_icon_url = MediaHelper::getImageUrl($about_page_second_section_icon->media->file_name);
+}else{
+	$about_page_second_section_icon_url = $baseUrl.'/images/home_hotel2_about3.png';
+}
 
-$this->title = 'About Hotel';
+$this->title = $about_title;
 $this->params['subheader'] = '<div id="Subheader" style="padding:190px 0 100px;">
                 <div class="container">
                     <div class="column one">
-                        <h1 class="title">About the hotel</h1>
+                        <h1 class="title">'.$about_title.'</h1>
                     </div>
                 </div>
             </div>';
+	
 ?>
                         <div class="section mcb-section " style="padding-top:70px; padding-bottom:30px; background-image:url(<?= $baseUrl;?>/images/home_hotel2_pattern.png); background-repeat:repeat; background-position:center; ">
                             <div class="section_wrapper mcb-section-inner">
@@ -38,9 +74,7 @@ $this->params['subheader'] = '<div id="Subheader" style="padding:190px 0 100px;"
                                     <!-- One Full Row-->
                                     <div class="column mcb-column one column_column">
                                         <div class="column_attr align_right" style=" padding:10px 5% 0 0;">
-                                            <h2>Lorem ipsum dolor
-												<br>
-												mit samet et omni</h2>
+                                            <h2><?= $about_page_content_title;?></h2>
                                         </div>
                                     </div>
                                 </div>
@@ -49,16 +83,8 @@ $this->params['subheader'] = '<div id="Subheader" style="padding:190px 0 100px;"
                                     <div class="column mcb-column one column_column">
                                         <div class="column_attr">
                                             <div style="border-left: 1px solid #c2c2c2; padding: 15px 0 5px 7%;">
-                                                <h4>Sed hendrerit risus a ante elementum, vitae blandit nibh eleifend. Nulla interdum auctor elit ut elementum. In cursus, tellus nec eleifend dapibus, sem posuere. In tincidunt; tellus ac hendrerit pretium, urna libero malesuada eros, vestibulum sagittis quam magna ac velit.</h4>
-                                                <p>
-                                                    Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodm aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam vfugit, sed quia consequuntur magni dolores eos qui ratione volui nesciunt.Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem apeluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione volui nesciunt.
-                                                </p>
-                                                <p>
-                                                    Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodm aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam vfugit, sed quia consequuntur magni dolores eos qui ratione volui nesciunt.
-                                                </p>
-                                                <p>
-                                                    Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem apeluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione volui nesciunt.
-                                                </p>
+                                                <h4><?= $about_page_content_subtitle;?></h4>
+                                                <p><?= $about_page_content_content;?></p>
                                             </div>
                                         </div>
                                     </div>
@@ -72,7 +98,7 @@ $this->params['subheader'] = '<div id="Subheader" style="padding:190px 0 100px;"
                                     <!-- One Full Row-->
                                     <div class="column mcb-column one column_image ">
                                         <div class="image_frame image_item no_link scale-with-grid aligncenter no_border">
-                                            <div class="image_wrapper"><img class="scale-with-grid" src="<?= $baseUrl;?>/images/home_hotel2_about1.jpg" alt="" width="960" height="700" />
+                                            <div class="image_wrapper"><img class="scale-with-grid" src="<?= $about_page_image_1_url;?>" alt="" width="960" height="700" />
                                             </div>
                                         </div>
                                     </div>
@@ -82,7 +108,7 @@ $this->params['subheader'] = '<div id="Subheader" style="padding:190px 0 100px;"
                                     <!-- One Full Row-->
                                     <div class="column mcb-column one column_image ">
                                         <div class="image_frame image_item no_link scale-with-grid aligncenter no_border">
-                                            <div class="image_wrapper"><img class="scale-with-grid" src="<?= $baseUrl;?>/images/home_hotel2_about2.jpg" alt="" width="960" height="700" />
+                                            <div class="image_wrapper"><img class="scale-with-grid" src="<?= $about_page_image_1_url;?>" alt="" width="960" height="700" />
                                             </div>
                                         </div>
                                     </div>
@@ -95,14 +121,14 @@ $this->params['subheader'] = '<div id="Subheader" style="padding:190px 0 100px;"
                                     <!-- One Full Row-->
                                     <div class="column mcb-column one column_image ">
                                         <div class="image_frame image_item no_link scale-with-grid aligncenter no_border">
-                                            <div class="image_wrapper"><img class="scale-with-grid" src="<?= $baseUrl;?>/images/home_hotel2_about3.png" alt="" width="98" height="76" />
+                                            <div class="image_wrapper"><img class="scale-with-grid" src="<?= $about_page_second_section_icon_url;?>" alt="" width="98" height="76" />
                                             </div>
                                         </div>
                                     </div>
                                     <!-- One Full Row-->
                                     <div class="column mcb-column one column_column">
                                         <div class="column_attr align_center" style=" padding:0 10%;">
-                                            <h2>Duis auteat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id laborum edut perspiciatiau dantium totam.</h2>
+                                            <h2><?= $about_page_second_section_title?></h2>
                                         </div>
                                     </div>
                                 </div>
@@ -114,24 +140,14 @@ $this->params['subheader'] = '<div id="Subheader" style="padding:190px 0 100px;"
                                     <!-- One Second (1/2) Column -->
                                     <div class="column mcb-column one-second column_column">
                                         <div class="column_attr">
-                                            <h4>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodm aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam vfugit, sed quia consequuntur magni dolores eos qui ratione volui nesciunt.</h4>
-                                            <p class="big">
-                                                Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem apeluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione volui nesciunt.
-                                            </p>
-                                            <p class="big">
-                                                Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Ut et nunc at nibh egestas ultrices dictum a dolor? Quisque turpis duis.
-                                            </p>
+                                            <h4><?= $about_page_second_section_subtitle?></h4>
+                                            <p class="big"><?= substr($about_page_second_section_content, 0, 385);?></p>
                                         </div>
                                     </div>
                                     <!-- One Second (1/2) Column -->
                                     <div class="column mcb-column one-second column_column">
                                         <div class="column_attr">
-                                            <p class="big">
-                                                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut posuere mattis mi eu condimentum. Praesent ornare, elit eu cursus commodo, arcu metus facilisis sed. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione volui nesciunt.
-                                            </p>
-                                            <p class="big">
-                                                Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione volui nesciunt.
-                                            </p>
+                                            <p class="big"><?= substr($about_page_second_section_content, 385);?></p>
                                         </div>
                                     </div>
                                 </div>
@@ -145,7 +161,7 @@ $this->params['subheader'] = '<div id="Subheader" style="padding:190px 0 100px;"
                                     <div class="column mcb-column one column_hover_color ">
                                         <div class="hover_color" style="background:#73818a;">
                                             <div class="hover_color_bg" style="background:#8a9399;">
-                                                <a href="#">
+                                                <a href="<?= $urlManager->createAbsoluteUrl(['site/contact']);?>">
                                                     <div class="hover_color_wrapper">
                                                         <h2 style="font-weight: 400; color: #fff; margin: 0px; padding: 30px 0 35px;">Contact information</h2>
                                                     </div>
@@ -160,7 +176,7 @@ $this->params['subheader'] = '<div id="Subheader" style="padding:190px 0 100px;"
                                     <div class="column mcb-column one column_hover_color ">
                                         <div class="hover_color" style="background:#6eb3bb;">
                                             <div class="hover_color_bg" style="background:#88c6cd;">
-                                                <a href="#">
+                                                <a href="<?= $urlManager->createAbsoluteUrl(['booking/create']);?>">
                                                     <div class="hover_color_wrapper">
                                                         <h2 style="font-weight: 400; color: #fff; margin: 0px; padding: 30px 0 35px;">Check accommodation</h2>
                                                     </div>

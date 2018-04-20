@@ -2,52 +2,99 @@
 use yii\web\View;
 use yii\widgets\ActiveForm;
 use yii\captcha\Captcha;
+use common\models\Setting;
+use common\models\Media;
+use common\components\MediaHelper;
 
 $user = Yii::$app->user;
 $urlManager = Yii::$app->urlManager;
 $baseUrl = $urlManager->baseUrl;
 
 $this->title = 'Resort';
+
+//HOME PAGE OPTIONS
+$homeOptionModels = Setting::find()->where(['setting_group' => Setting::GROUP_HOME])->all();
+$homeOptions = [];
+foreach($homeOptionModels as $themeOptionModel){
+	$homeOptions[$themeOptionModel->name] = $themeOptionModel;
+}
+$feature_images_arr = [];
+for($i = 1; $i <=3; $i++){
+	$feature_image = $homeOptions['feature_image_'.$i];
+	$feature_image_url = '';
+	if($feature_image->media){
+		$feature_image_url = MediaHelper::getImageUrl($feature_image->media->file_name);
+	}
+	$feature_title = $homeOptions['feature_title_'.$i]['value'];
+	$feature_images_arr[] = [
+		'title' => $feature_title,
+		'image' => $feature_image_url,
+	];
+}
+$welcome_title = $homeOptions['welcome_title']['value'];
+$welcome_subtitle = $homeOptions['welcome_subtitle']['value'];
+$welcome_content = $homeOptions['welcome_content']['value'];
+$welcome_button_text = $homeOptions['welcome_button_text']['value'];
+$welcome_button_link = $homeOptions['welcome_button_link']['value'];
+
+$localization_title = $homeOptions['localization_title']['value'];
+$localization_images = $homeOptions['localization_images']['value'];
+$localization_images_arr = [];
+if($localization_images){
+	$temp = json_decode($localization_images);
+	foreach($temp as $media){
+		$mediaModel = Media::findOne($media);
+		if($mediaModel){
+			$localization_images_arr[] = MediaHelper::getImageUrl($mediaModel->file_name);
+		}
+	}
+}
+$services_title = $homeOptions['services_title']['value'];
+$services_content = $homeOptions['services_content']['value'];
+$services_arr = [];
+for($i = 1; $i <=6; $i++){
+	$service_image = $homeOptions['service_icon_'.$i];
+	$service_image_url = '';
+	if($service_image->media){
+		$service_image_url = MediaHelper::getImageUrl($service_image->media->file_name);
+	}
+	$service_title = $homeOptions['service_title_'.$i]['value'];
+	$service_content = $homeOptions['service_content_'.$i]['value'];
+	$services_arr[] = [
+		'title' => $service_title,
+		'content' => $service_content,
+		'image' => $service_image_url,
+	];
+}
+$book_a_room_section_content = $homeOptions['book_a_room_section_content']['value'];
+$map_address = $homeOptions['map_address']['value'];
+$map_address_marker = $homeOptions['map_address_marker'];
+if($map_address_marker->media){
+	$markerUrl = MediaHelper::getImageUrl($map_address_marker->media->file_name);
+}else{
+	$markerUrl = $baseUrl.'/images/home_hotel2_pin.png';
+}
+$address = $homeOptions['address']['value'];
+$phone = $homeOptions['phone']['value'];
+$email = $homeOptions['email']['value'];
 ?>
                         <div class="section mcb-section " style="padding-top:70px; padding-bottom:20px; background-image:url(<?= $baseUrl;?>/images/home_hotel2_pattern.png); background-repeat:repeat; background-position:center; ">
                             <div class="section_wrapper mcb-section-inner">
                                 <div class="wrap mcb-wrap one clearfix">
                                     <!-- One Third (1/3) Column -->
-                                    <div class="column mcb-column one-third column_sliding_box ">
-                                        <div class="sliding_box">
-                                            <a href="#">
-                                                <div class="photo_wrapper"><img class="scale-with-grid" src="<?= $baseUrl;?>/images/home_hotel2_offer1.jpg" alt="Astonishing view" width="700" height="910" />
-                                                </div>
-                                                <div class="desc_wrapper">
-                                                    <h4>Astonishing view</h4>
-                                                </div>
-                                            </a>
-                                        </div>
-                                    </div>
-                                    <!-- One Third (1/3) Column -->
-                                    <div class="column mcb-column one-third column_sliding_box ">
-                                        <div class="sliding_box">
-                                            <a href="#">
-                                                <div class="photo_wrapper"><img class="scale-with-grid" src="<?= $baseUrl;?>/images/home_hotel2_offer2.jpg" alt="Wellness and spa" width="700" height="910" />
-                                                </div>
-                                                <div class="desc_wrapper">
-                                                    <h4>Wellness and spa</h4>
-                                                </div>
-                                            </a>
-                                        </div>
-                                    </div>
-                                    <!-- One Third (1/3) Column -->
-                                    <div class="column mcb-column one-third column_sliding_box ">
-                                        <div class="sliding_box">
-                                            <a href="#">
-                                                <div class="photo_wrapper"><img class="scale-with-grid" src="<?= $baseUrl;?>/images/home_hotel2_offer3.jpg" alt="Romantic dinner" width="700" height="910" />
-                                                </div>
-                                                <div class="desc_wrapper">
-                                                    <h4>Romantic dinner</h4>
-                                                </div>
-                                            </a>
-                                        </div>
-                                    </div>
+									<?php foreach($feature_images_arr as $feature_image){?>
+										<div class="column mcb-column one-third column_sliding_box ">
+											<div class="sliding_box">
+												<a href="#">
+													<div class="photo_wrapper"><img class="scale-with-grid" src="<?= $feature_image['image'];?>" alt="<?= $feature_image['title'];?>" width="700" height="910" />
+													</div>
+													<div class="desc_wrapper">
+														<h4><?= $feature_image['title'];?></h4>
+													</div>
+												</a>
+											</div>
+										</div>
+									<?php }?>
                                 </div>
                             </div>
                         </div>
@@ -57,9 +104,7 @@ $this->title = 'Resort';
                                     <!-- Two Fifth (2/5) Column -->
                                     <div class="column mcb-column two-fifth column_column">
                                         <div class="column_attr align_right" style=" padding:0 5% 0 0;">
-                                            <h2>Welcome
-												<br>
-												to the BE HOTEL</h2>
+                                            <h2><?= $welcome_title?></h2>
                                             <hr class="no_line hrmargin_b_30" />
                                             <div class="image_frame image_item no_link scale-with-grid alignnone no_border">
                                                 <div class="image_wrapper"><img class="scale-with-grid" src="<?= $baseUrl;?>/images/home_hotel2_stars.png" alt="" width="143" height="22" />
@@ -71,13 +116,9 @@ $this->title = 'Resort';
                                     <div class="column mcb-column three-fifth column_column">
                                         <div class="column_attr">
                                             <div style="border-left: 1px solid #c2c2c2; padding: 15px 0 5px 7%;">
-                                                <h4>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam quis nostrud</h4>
-                                                <p>
-                                                    Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod magni dolores eos qui ratione volui nesciunt.
-                                                </p>
-                                                <p>
-                                                    Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur.
-                                                </p><a class="button button_js" href="content/hotel2/booking.html"><span class="button_label">Book your room</span></a>
+                                                <h4><?= $welcome_subtitle?></h4>
+                                                <p><?= $welcome_content?></p>
+												<a class="button button_js" href="<?= $welcome_button_link?>"><span class="button_label"><?= $welcome_button_text?></span></a>
                                             </div>
                                         </div>
                                     </div>
@@ -90,7 +131,7 @@ $this->title = 'Resort';
                                     <!-- One Full Row-->
                                     <div class="column mcb-column one column_column">
                                         <div class="column_attr align_center">
-                                            <h2 class="themecolor">Localization and attractions</h2>
+                                            <h2 class="themecolor"><?= $localization_title?></h2>
                                         </div>
                                     </div>
                                 </div>
@@ -106,40 +147,14 @@ $this->title = 'Resort';
                                             <!-- Image Gallery-->
                                             <div id='gallery-1' class='gallery galleryid-2 gallery-columns-5 gallery-size-full file flat'>
                                                 <!-- Gallery item -->
-                                                <dl class='gallery-item'>
-                                                    <dt class='gallery-icon portrait'>
-															<a href='<?= $baseUrl;?>/images/home_hotel2_gallery1.jpg'><img width="700" height="802" src="<?= $baseUrl;?>/images/home_hotel2_gallery1.jpg" class="attachment-full" alt="home_hotel2_gallery1" /></a>
-														</dt>
-                                                    <dd></dd>
-                                                </dl>
-                                                <!-- Gallery item -->
-                                                <dl class='gallery-item'>
-                                                    <dt class='gallery-icon portrait'>
-															<a href='<?= $baseUrl;?>/images/home_hotel2_gallery2.jpg'><img width="700" height="802" src="<?= $baseUrl;?>/images/home_hotel2_gallery2.jpg" class="attachment-full" alt="home_hotel2_gallery2" /></a>
-														</dt>
-                                                    <dd></dd>
-                                                </dl>
-                                                <!-- Gallery item -->
-                                                <dl class='gallery-item'>
-                                                    <dt class='gallery-icon portrait'>
-															<a href='<?= $baseUrl;?>/images/home_hotel2_gallery3.jpg'><img width="700" height="802" src="<?= $baseUrl;?>/images/home_hotel2_gallery3.jpg" class="attachment-full" alt="home_hotel2_gallery3" /></a>
-														</dt>
-                                                    <dd></dd>
-                                                </dl>
-                                                <!-- Gallery item -->
-                                                <dl class='gallery-item'>
-                                                    <dt class='gallery-icon portrait'>
-															<a href='<?= $baseUrl;?>/images/home_hotel2_gallery4.jpg'><img width="700" height="802" src="<?= $baseUrl;?>/images/home_hotel2_gallery4.jpg" class="attachment-full" alt="home_hotel2_gallery4" /></a>
-														</dt>
-                                                    <dd></dd>
-                                                </dl>
-                                                <!-- Gallery item -->
-                                                <dl class='gallery-item'>
-                                                    <dt class='gallery-icon portrait'>
-															<a href='<?= $baseUrl;?>/images/home_hotel2_gallery5.jpg'><img width="700" height="802" src="<?= $baseUrl;?>/images/home_hotel2_gallery5.jpg" class="attachment-full" alt="home_hotel2_gallery5" /></a>
-														</dt>
-                                                    <dd></dd>
-                                                </dl>
+												<?php foreach($localization_images_arr as $localization_image){?>
+													<dl class='gallery-item'>
+														<dt class='gallery-icon portrait'>
+																<a href='<?= $localization_image?>'><img width="700" height="802" src="<?= $localization_image?>" class="attachment-full" alt="home_hotel2_gallery1" /></a>
+															</dt>
+														<dd></dd>
+													</dl>
+												<?php }?>
                                                 <br class="flv_clear_both" />
                                             </div>
                                         </div>
@@ -153,15 +168,13 @@ $this->title = 'Resort';
                                     <!-- One Second (1/2) Column -->
                                     <div class="column mcb-column one-second column_column">
                                         <div class="column_attr align_right" style=" padding:0 5% 0 0;">
-                                            <h2> Services
-												<br>
-												and standards</h2>
+                                            <h2><?= $service_title?></h2>
                                         </div>
                                     </div>
                                     <!-- One Second (1/2) Column -->
                                     <div class="column mcb-column one-second column_column">
                                         <div class="column_attr" style=" padding:10px 0 0 0;">
-                                            <h4>Consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore ausmod tempor incididunt ut labore et dolore. Proin eget tellus tristique lacinia erat non.</h4>
+                                            <h4><?= $service_content?></h4>
                                         </div>
                                     </div>
                                     <!-- One Full Row-->
@@ -178,86 +191,40 @@ $this->title = 'Resort';
                                 <!-- One Second (1/2) Column -->
                                 <div class="wrap mcb-wrap one-second clearfix" style="padding:0 3% 0 0; ">
                                     <!-- One Full Row-->
-                                    <div class="column mcb-column one column_list ">
-                                        <div class="list_item lists_2 clearfix">
-                                            <div class="list_left list_image"><img src="<?= $baseUrl;?>/images/home_hotel2_icon1.png" alt="Exclusive interior" class="scale-with-grid" width="77" height="77" />
-                                            </div>
-                                            <div class="list_right">
-                                                <h4>Exclusive interior</h4>
-                                                <div class="desc">
-                                                    Nullam interdum pellentesque orci at luctus. Vivamus scelerisque purus et auctor iaculis. Curabitur molestie ut neque non egestas. Nulla et tempor nibh, et sed. Vestibulum lacinia erat non nibh feugiat dignis.
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <!-- One Full Row-->
-                                    <div class="column mcb-column one column_list ">
-                                        <div class="list_item lists_2 clearfix">
-                                            <div class="list_left list_image"><img src="<?= $baseUrl;?>/images/home_hotel2_icon2.png" alt="Sea view" class="scale-with-grid" width="77" height="77" />
-                                            </div>
-                                            <div class="list_right">
-                                                <h4>Sea view</h4>
-                                                <div class="desc">
-                                                    Fusce elit orci; condimentum at erat a, fermentum interdum ex. Fusce finibus volutpat rutrum. Pellentesque elementum rutrum leo sed dictum. Maecenas in erat id fringilla nunc vel ipsum massa nunc.
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <!-- One Full Row-->
-                                    <div class="column mcb-column one column_list ">
-                                        <div class="list_item lists_2 clearfix">
-                                            <div class="list_left list_image"><img src="<?= $baseUrl;?>/images/home_hotel2_icon3.png" alt="Fitness, wellness and spa" class="scale-with-grid" width="77" height="77" />
-                                            </div>
-                                            <div class="list_right">
-                                                <h4>Fitness, wellness and spa</h4>
-                                                <div class="desc">
-                                                    Vivamus sapien velit, porttitor sed metus a; viverra porttitor mauris. Pellentesque in lectus pharetra, malesuada purus et, ultricies elit. Integer feugiat sed sit amet justo dictum ornare sed amet.
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
+									<?php 
+										for($i=0; $i < 3; $i++){
+											$service = $services_arr[$i];
+									?>
+										<div class="column mcb-column one column_list ">
+											<div class="list_item lists_2 clearfix">
+												<div class="list_left list_image"><img src="<?= $service['image']?>" alt="Exclusive interior" class="scale-with-grid" width="77" height="77" />
+												</div>
+												<div class="list_right">
+													<h4><?= $service['title']?></h4>
+													<div class="desc"><?= $service['content']?></div>
+												</div>
+											</div>
+										</div>
+									<?php }?>
                                 </div>
                                 <!-- One Second (1/2) Column -->
                                 <div class="wrap mcb-wrap one-second clearfix">
                                     <!-- One Full Row-->
-                                    <div class="column mcb-column one column_list ">
-                                        <div class="list_item lists_2 clearfix">
-                                            <div class="list_left list_image"><img src="<?= $baseUrl;?>/images/home_hotel2_icon4.png" alt="Free Wi-Fi" class="scale-with-grid" width="77" height="77" />
-                                            </div>
-                                            <div class="list_right">
-                                                <h4>Free Wi-Fi</h4>
-                                                <div class="desc">
-                                                    Suspendisse eget dapibus dolor? Aenean consectetur ex et metus convallis pharetra. Nullam nunc lorem; semper at leo non, mollis pulvinar orci! Aliquam volutpat blandit sapien ac odio cras amet.
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <!-- One Full Row-->
-                                    <div class="column mcb-column one column_list ">
-                                        <div class="list_item lists_2 clearfix">
-                                            <div class="list_left list_image"><img src="<?= $baseUrl;?>/images/home_hotel2_icon5.png" alt="490m2 of swimming pool" class="scale-with-grid" width="77" height="77" />
-                                            </div>
-                                            <div class="list_right">
-                                                <h4>490m2 of swimming pool</h4>
-                                                <div class="desc">
-                                                    Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Phasellus aliquam arcu ut tellus dignissim, eu auctor lectus amet. In feugiat, mi et maximus semper, neque elit auctor.
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <!-- One Full Row-->
-                                    <div class="column mcb-column one column_list ">
-                                        <div class="list_item lists_2 clearfix">
-                                            <div class="list_left list_image"><img src="<?= $baseUrl;?>/images/home_hotel2_icon6.png" alt="Bar and restaurant" class="scale-with-grid" width="77" height="77" />
-                                            </div>
-                                            <div class="list_right">
-                                                <h4>Bar and restaurant</h4>
-                                                <div class="desc">
-                                                    Nulla a feugiat ante, ac suscipit dolor. Morbi et tortor viverra, tincidunt urna in, luctus purus. Vestibulum dignissim diam id ipsum faucibus, in commodo amet. Nunc pellentesque id leo posuere.
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
+									<?php 
+										for($i=3; $i < 6; $i++){
+											$service = $services_arr[$i];
+									?>
+										<div class="column mcb-column one column_list ">
+											<div class="list_item lists_2 clearfix">
+												<div class="list_left list_image"><img src="<?= $service['image']?>" alt="Exclusive interior" class="scale-with-grid" width="77" height="77" />
+												</div>
+												<div class="list_right">
+													<h4><?= $service['title']?></h4>
+													<div class="desc"><?= $service['content']?></div>
+												</div>
+											</div>
+										</div>
+									<?php }?>
                                 </div>
                             </div>
                         </div>
@@ -338,9 +305,7 @@ $this->title = 'Resort';
                                     <!-- One Full Row-->
                                     <div class="column mcb-column one column_column">
                                         <div class="column_attr align_center">
-                                            <p>
-                                                Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exommodo consequat.
-                                            </p>
+                                            <p><?= $book_a_room_section_content;?></p>
                                         </div>
                                     </div>
                                 </div>
@@ -371,7 +336,7 @@ $this->title = 'Resort';
 										<?php $form = ActiveForm::begin(["action" => ["site/contact"]]); ?>
 											<!-- One Third (1/3) Column -->
 											<div class="column one-third">
-												<?= $form->field($contactModel, 'name')->textInput(['autofocus' => true]) ?>
+												<?= $form->field($contactModel, 'name')->textInput() ?>
 												<?= $form->field($contactModel, 'email') ?>
 												<?= $form->field($contactModel, 'subject') ?>
 											</div>
@@ -395,21 +360,17 @@ $this->title = 'Resort';
                                     <div class="column mcb-column one column_column">
                                         <div class="column_attr">
                                             <div style="border-left: 1px solid #c2c2c2; padding: 15px 0 5px 7%;">
-                                                <h4>Level 13, 2 Elizabeth St,
-													<br>
-													Melbourne, Victoria 3000
-													<br>
-													Australia</h4>
+                                                <h4><?= $address;?></h4>
                                                 <hr class="no_line hrmargin_b_30" />
                                                 <p class="hrmargin_0 big">
                                                     Call us:
                                                 </p>
-                                                <h3 class="themecolor">+61 (0) 3 8376 6284</h3>
+                                                <h3 class="themecolor"><a href="tel:<?= $phone;?>"><?= $phone;?></a></h3>
                                                 <hr class="no_line hrmargin_b_30" />
                                                 <p class="hrmargin_0 big">
                                                     Email:
                                                 </p>
-                                                <h3 class="themecolor">noreply@envato.com</h3>
+                                                <h3 class="themecolor"><a href="mailto:<?= $email;?>"><?= $email;?></a></h3>
                                             </div>
                                         </div>
                                     </div>
@@ -424,7 +385,7 @@ $this->title = 'Resort';
                                     <div class="column mcb-column one column_hover_color ">
                                         <div class="hover_color" style="background:#73818a;">
                                             <div class="hover_color_bg" style="background:#8a9399;">
-                                                <a href="content/hotel2/booking.html">
+                                                <a href="<?= $urlManager->createAbsoluteUrl(['site/contact']);?>">
                                                     <div class="hover_color_wrapper">
                                                         <h2 style="font-weight: 400; color: #fff; margin: 0px; padding: 30px 0 35px;">Contact information</h2>
                                                     </div>
@@ -439,7 +400,7 @@ $this->title = 'Resort';
                                     <div class="column mcb-column one column_hover_color ">
                                         <div class="hover_color" style="background:#6eb3bb;">
                                             <div class="hover_color_bg" style="background:#88c6cd;">
-                                                <a href="content/hotel2/rooms.html">
+                                                <a href="<?= $urlManager->createAbsoluteUrl(['booking/create']);?>">
                                                     <div class="hover_color_wrapper">
                                                         <h2 style="font-weight: 400; color: #fff; margin: 0px; padding: 30px 0 35px;">Check accommodation</h2>
                                                     </div>
@@ -527,7 +488,7 @@ $this->title = 'Resort';
 	$this->registerJsFile('http://maps.google.com/maps/api/js?sensor=false&ver=5.9');
 	$this->registerJs('
         function google_maps_566008f9ece90() {
-            var latlng = new google.maps.LatLng(-33.8710, 151.2039);
+            var latlng = new google.maps.LatLng('.$map_address.');
             var draggable = true;
             var myOptions = {
                 zoom: 13,
@@ -657,7 +618,7 @@ $this->title = 'Resort';
             var map = new google.maps.Map(document.getElementById("google-map-area-566008f9ece90"), myOptions);
             var marker = new google.maps.Marker({
                 position: latlng,
-                icon: "images/home_hotel2_pin.png",
+                icon: "'.$markerUrl.'",
                 map: map
             });
         }
