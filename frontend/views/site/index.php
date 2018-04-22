@@ -168,7 +168,7 @@ $email = $homeOptions['email']['value'];
                                 <div class="wrap mcb-wrap one-second clearfix" style="padding:0 3% 0 0; ">
                                     <!-- One Full Row-->
 									<?php 
-										for($i=0; $i < 3; $i++){
+										for($i=0; $i < 2; $i++){
 											$service = $services_arr[$i];
 									?>
 										<div class="column mcb-column one column_list ">
@@ -187,7 +187,7 @@ $email = $homeOptions['email']['value'];
                                 <div class="wrap mcb-wrap one-second clearfix">
                                     <!-- One Full Row-->
 									<?php 
-										for($i=3; $i < 6; $i++){
+										for($i=2; $i < 4; $i++){
 											$service = $services_arr[$i];
 									?>
 										<div class="column mcb-column one column_list ">
