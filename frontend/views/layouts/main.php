@@ -137,7 +137,7 @@ if($footer_icon->media){
                                                 <a href="<?= $urlManager->createAbsoluteUrl(['site/index'])?>"><span>Home</span></a>
                                             </li>
                                             <li>
-                                                <a href="<?= $urlManager->createAbsoluteUrl(['site/about-hotel'])?>"><span>The hotel</span></a>
+                                                <a href="<?= $urlManager->createAbsoluteUrl(['site/about-hotel'])?>"><span>About</span></a>
                                             </li>
                                             <li>
                                                 <a href="<?= $urlManager->createAbsoluteUrl(['site/rooms'])?>"><span>Rooms</span></a>
@@ -159,7 +159,7 @@ if($footer_icon->media){
 												</li>
 											<?php }else{?>
 												<li>
-													<a href="<?= $urlManager->createAbsoluteUrl(['site/my-account'])?>"><span>My Account</span></a>
+													<a href="<?= $urlManager->createAbsoluteUrl(['site/my-account'])?>"><span>My Account <span style="font-size:16px;display:inline;padding:0;" title="<?= Yii::$app->user->identity->name?>">(<?= substr(Yii::$app->user->identity->name, 0,6);?>)</span></a>
 												</li>
 											<?php }?>
                                         </ul>

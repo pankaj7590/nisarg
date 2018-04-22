@@ -28,9 +28,12 @@ $this->params['subheader'] = '<div id="Subheader" style="padding:190px 0 100px;"
 			<div class="column mcb-column one-third column_placeholder">
 				<div class="placeholder">
 					<?php $form = ActiveForm::begin(['id' => 'form-signup']); ?>
-						<?= $form->field($model, 'username')->textInput(['autofocus' => true]) ?>
+						<?= $form->field($model, 'name')->textInput(['autofocus' => true]) ?>
+						<?= $form->field($model, 'username')->textInput() ?>
 						<?= $form->field($model, 'email') ?>
+						<?= $form->field($model, 'phone')->textInput() ?>
 						<?= $form->field($model, 'password')->passwordInput() ?>
+						<?= $form->field($model, 'captcha')->widget(\yii\captcha\Captcha::classname()) ?>
 						<div class="form-group">
 							<?= Html::submitButton('Signup', ['class' => 'btn btn-primary', 'name' => 'signup-button']) ?>
 						</div>

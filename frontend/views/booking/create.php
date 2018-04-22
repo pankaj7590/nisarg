@@ -113,11 +113,11 @@ $this->params['subheader'] = '<div id="Subheader" style="padding:190px 0 100px;"
                                                     <div class="clearfix"></div>
                                                     <!-- One Third (1/3) Column -->
                                                     <div class="column one-third">
-														<?= $form->field($model, 'checkin_date')->textInput(['type' => 'date']); ?>
+														<?= $form->field($model, 'checkin_date')->textInput(['type' => 'date', 'min' => date('Y-m-d')]); ?>
                                                     </div>
                                                     <!-- One Third (1/3) Column -->
                                                     <div class="column one-third">
-														<?= $form->field($model, 'checkout_date')->textInput(['type' => 'date']); ?>
+														<?= $form->field($model, 'checkout_date')->textInput(['type' => 'date', 'min' => date('Y-m-d')]); ?>
                                                     </div>
                                                     <!-- One Third (1/3) Column -->
                                                     <div class="column one-third">
@@ -342,4 +342,13 @@ $this->params['subheader'] = '<div id="Subheader" style="padding:190px 0 100px;"
             google_maps_566008f9ece90();
         });
 	', View::POS_READY, "map-location");
+	
+	$this->registerJs("
+		$('#booking-checkin_date').on('change', function(){
+			var checkin_date = $(this).val();
+			if(typeof checkin_date != 'undefined'){
+				$('#booking-checkout_date').attr('min', checkin_date);
+			}
+		});
+	", View::POS_READY, "set-min-checkout-date");
 ?>

@@ -6,11 +6,11 @@ $user = Yii::$app->user;
 $urlManager = Yii::$app->urlManager;
 $baseUrl = $urlManager->baseUrl;
 
-$this->title = 'Gallery';
+$this->title = $model->name;
 $this->params['subheader'] = '<div id="Subheader" style="padding:190px 0 100px;">
                 <div class="container">
                     <div class="column one">
-                        <h1 class="title">Image gallery</h1>
+                        <h1 class="title">'.$this->title.'</h1>
                     </div>
                 </div>
             </div>';
@@ -21,21 +21,16 @@ $this->params['subheader'] = '<div id="Subheader" style="padding:190px 0 100px;"
                                     <!-- One Full Row-->
                                     <div class="column mcb-column one column_column">
                                         <div class="column_attr align_center">
+
                                             <!-- Image Gallery-->
                                             <div id='gallery-2' class='gallery galleryid-32 gallery-columns-3 gallery-size-full file isotope'>
                                                 <!-- Gallery item -->
-												<?php foreach($dataProvider->getModels() as $gallery){?>
+												<?php foreach($model->galleryMedia as $galleryMedia){?>
 													<dl class='gallery-item'>
 														<dt class='gallery-icon portrait'>
-																<a href='<?= MediaHelper::getImageUrl(($gallery->firstImage?$gallery->firstImage->media->file_name:''))?>'>
-																	<img width="700" src="<?= MediaHelper::getImageUrl(($gallery->firstImage?$gallery->firstImage->media->file_name:''))?>" class="attachment-full" alt="home_hotel2_gallery2" />
-																</a>
-														</dt>
-														<dd>
-															<a href='<?= $urlManager->createAbsoluteUrl(['gallery/view', 'id' => $gallery->id])?>'>
-																<?= $gallery->name;?>
-															</a>
-														</dd>
+																<a href='<?= MediaHelper::getImageUrl(($galleryMedia->media?$galleryMedia->media->file_name:''))?>'><img width="700" src="<?= MediaHelper::getImageUrl(($galleryMedia->media?$galleryMedia->media->file_name:''))?>" class="attachment-full" alt="home_hotel2_gallery2" /></a>
+															</dt>
+														<dd></dd>
 													</dl>
 												<?php }?>
                                             </div>

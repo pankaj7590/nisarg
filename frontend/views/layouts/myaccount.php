@@ -115,7 +115,7 @@ if($menu_bar_logo->media){
                                                 <a href="<?= $urlManager->createAbsoluteUrl(['site/gallery'])?>"><span>Gallery</span></a>
                                             </li>
 											<li>
-												<a href="<?= $urlManager->createAbsoluteUrl(['site/logout'])?>" data-method="post"><span>Logout</span></a>
+												<a href="<?= $urlManager->createAbsoluteUrl(['site/logout'])?>" data-method="post"><span>Logout <span style="font-size:16px;display:inline;padding:0;" title="<?= Yii::$app->user->identity->name?>">(<?= substr(Yii::$app->user->identity->name, 0,6);?>)</span></span></a>
 											</li>
                                         </ul>
                                     </nav><a class="responsive-menu-toggle" href="#"><i class="icon-menu"></i></a>

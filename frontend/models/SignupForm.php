@@ -10,9 +10,12 @@ use common\models\Customer;
  */
 class SignupForm extends Model
 {
+    public $name;
     public $username;
     public $email;
+    public $phone;
     public $password;
+    public $captcha;
 
 
     /**
@@ -26,6 +29,11 @@ class SignupForm extends Model
             ['username', 'unique', 'targetClass' => '\common\models\Customer', 'message' => 'This username has already been taken.'],
             ['username', 'string', 'min' => 2, 'max' => 255],
 
+            ['name', 'trim'],
+            ['name', 'required'],
+            ['name', 'string', 'min' => 2, 'max' => 255],
+			['name', 'match', 'pattern' => '/^[a-zA-Z\s]+$/', 'message' => 'Name can only contain characters.'],
+			
             ['email', 'trim'],
             ['email', 'required'],
             ['email', 'email'],
@@ -34,6 +42,15 @@ class SignupForm extends Model
 
             ['password', 'required'],
             ['password', 'string', 'min' => 6],
+			
+            ['phone', 'trim'],
+            ['phone', 'required'],
+            ['phone', 'string', 'max' => 10],
+            ['phone', 'number'],
+            ['phone', 'unique', 'targetClass' => '\common\models\Customer', 'message' => 'This phone number has already been taken.'],
+			
+            ['captcha', 'required'],
+            ['captcha', 'captcha'],
         ];
     }
 
@@ -50,10 +67,12 @@ class SignupForm extends Model
         
         $customer = new Customer();
         $customer->username = $this->username;
+        $customer->name = $this->name;
         $customer->email = $this->email;
+        $customer->phone = $this->phone;
         $customer->setPassword($this->password);
         $customer->generateAuthKey();
-        
+        $customer->save();
         return $customer->save() ? $customer : null;
     }
 }

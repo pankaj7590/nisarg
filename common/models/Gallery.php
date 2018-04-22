@@ -198,4 +198,8 @@ class Gallery extends \yii\db\ActiveRecord
     {
         return $this->hasMany(GalleryMedia::className(), ['gallery_id' => 'id']);
     }
+	
+	public function getFirstImage(){
+		return $this->hasOne(GalleryMedia::className(), ['gallery_id' => 'id']);
+	}
 }
