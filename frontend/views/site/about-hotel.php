@@ -108,7 +108,7 @@ $this->params['subheader'] = '<div id="Subheader" style="padding:190px 0 100px;"
                                     <!-- One Full Row-->
                                     <div class="column mcb-column one column_image ">
                                         <div class="image_frame image_item no_link scale-with-grid aligncenter no_border">
-                                            <div class="image_wrapper"><img class="scale-with-grid" src="<?= $about_page_image_1_url;?>" alt="" width="960" height="700" />
+                                            <div class="image_wrapper"><img class="scale-with-grid" src="<?= $about_page_image_2_url;?>" alt="" width="960" height="700" />
                                             </div>
                                         </div>
                                     </div>
