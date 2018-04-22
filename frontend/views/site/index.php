@@ -164,30 +164,6 @@ $email = $homeOptions['email']['value'];
                         </div>
                         <div class="section mcb-section " style="padding-top:70px; padding-bottom:20px; ">
                             <div class="section_wrapper mcb-section-inner">
-                                <div class="wrap mcb-wrap one clearfix">
-                                    <!-- One Second (1/2) Column -->
-                                    <div class="column mcb-column one-second column_column">
-                                        <div class="column_attr align_right" style=" padding:0 5% 0 0;">
-                                            <h2><?= $service_title?></h2>
-                                        </div>
-                                    </div>
-                                    <!-- One Second (1/2) Column -->
-                                    <div class="column mcb-column one-second column_column">
-                                        <div class="column_attr" style=" padding:10px 0 0 0;">
-                                            <h4><?= $service_content?></h4>
-                                        </div>
-                                    </div>
-                                    <!-- One Full Row-->
-                                    <div class="column mcb-column one column_column">
-                                        <div class="column_attr align_center">
-                                            <div style="width: 40%; height: 1px; margin: 0 auto; background: #c2c2c2;"></div>
-                                        </div>
-                                    </div>
-                                    <!-- One Full Row-->
-                                    <div class="column mcb-column one column_divider ">
-                                        <hr class="no_line hrmargin_b_20" />
-                                    </div>
-                                </div>
                                 <!-- One Second (1/2) Column -->
                                 <div class="wrap mcb-wrap one-second clearfix" style="padding:0 3% 0 0; ">
                                     <!-- One Full Row-->
@@ -201,7 +177,7 @@ $email = $homeOptions['email']['value'];
 												</div>
 												<div class="list_right">
 													<h4><?= $service['title']?></h4>
-													<div class="desc"><?= $service['content']?></div>
+													<!--<div class="desc"><?= $service['content']?></div>-->
 												</div>
 											</div>
 										</div>
@@ -220,7 +196,7 @@ $email = $homeOptions['email']['value'];
 												</div>
 												<div class="list_right">
 													<h4><?= $service['title']?></h4>
-													<div class="desc"><?= $service['content']?></div>
+													<!--<div class="desc"><?= $service['content']?></div>-->
 												</div>
 											</div>
 										</div>
@@ -266,11 +242,11 @@ $email = $homeOptions['email']['value'];
                                                     <div class="clearfix"></div>
                                                     <!-- One Third (1/3) Column -->
                                                     <div class="column one-third">
-														<?= $form->field($model, 'checkin_date')->textInput(['type' => 'date', 'min' => date('Y-m-d')]); ?>
+														<?= $form->field($model, 'checkin_date')->textInput(['type' => 'date', 'min' => date('Y-m-d', time()+(24*3600))]); ?>
                                                     </div>
                                                     <!-- One Third (1/3) Column -->
                                                     <div class="column one-third">
-														<?= $form->field($model, 'checkout_date')->textInput(['type' => 'date', 'min' => date('Y-m-d')]); ?>
+														<?= $form->field($model, 'checkout_date')->textInput(['type' => 'date', 'min' => date('Y-m-d', time()+(24*3600))]); ?>
                                                     </div>
                                                     <!-- One Third (1/3) Column -->
                                                     <div class="column one-third">
@@ -303,11 +279,11 @@ $email = $homeOptions['email']['value'];
                                         </div>
                                     </div>
                                     <!-- One Full Row-->
-                                    <div class="column mcb-column one column_column">
+                                    <!--<div class="column mcb-column one column_column">
                                         <div class="column_attr align_center">
                                             <p><?= $book_a_room_section_content;?></p>
                                         </div>
-                                    </div>
+                                    </div>-->
                                 </div>
                             </div>
                         </div>

@@ -343,4 +343,33 @@ class SiteController extends Controller
             'model' => $model,
         ]);
     }
+	
+	public function actionMyProfile(){
+		$this->layout = "myaccount";
+		$memberModel = $this->findCustomer(Yii::$app->user->id);
+		$memberModel->detachBehavior('blameable');
+					
+		if($memberModel->load(Yii::$app->request->post()) && $memberModel->save()){
+			return $this->redirect(['my-profile']);
+		}
+		return $this->render('profile',[
+            'model' => $memberModel,
+        ]);
+	}
+
+    /**
+     * Finds the Member model based on its primary key value.
+     * If the model is not found, a 404 HTTP exception will be thrown.
+     * @param integer $id
+     * @return Admission the loaded model
+     * @throws NotFoundHttpException if the model cannot be found
+     */
+    protected function findCustomer($id)
+    {
+        if (($model = Customer::findOne($id)) !== null) {
+            return $model;
+        }
+
+        throw new NotFoundHttpException('The requested member record does not exist.');
+    }
 }

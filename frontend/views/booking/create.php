@@ -113,11 +113,11 @@ $this->params['subheader'] = '<div id="Subheader" style="padding:190px 0 100px;"
                                                     <div class="clearfix"></div>
                                                     <!-- One Third (1/3) Column -->
                                                     <div class="column one-third">
-														<?= $form->field($model, 'checkin_date')->textInput(['type' => 'date', 'min' => date('Y-m-d')]); ?>
+														<?= $form->field($model, 'checkin_date')->textInput(['type' => 'date', 'min' => date('Y-m-d', time()+(24*3600))]); ?>
                                                     </div>
                                                     <!-- One Third (1/3) Column -->
                                                     <div class="column one-third">
-														<?= $form->field($model, 'checkout_date')->textInput(['type' => 'date', 'min' => date('Y-m-d')]); ?>
+														<?= $form->field($model, 'checkout_date')->textInput(['type' => 'date', 'min' => date('Y-m-d', time()+(24*3600))]); ?>
                                                     </div>
                                                     <!-- One Third (1/3) Column -->
                                                     <div class="column one-third">

@@ -104,9 +104,6 @@ if($menu_bar_logo->media){
                                                 <a href="<?= $urlManager->createAbsoluteUrl(['site/index'])?>"><span>Go Back</span></a>
                                             </li>
                                             <li>
-                                                <a href="<?= $urlManager->createAbsoluteUrl(['site/my-profile'])?>"><span>My Profile</span></a>
-                                            </li>
-                                            <li>
                                                 <a href="<?= $urlManager->createAbsoluteUrl(['booking/index'])?>"><span>My Bookings</span></a>
                                             </li>
                                         </ul>

@@ -80,6 +80,25 @@ class Booking extends \yii\db\ActiveRecord
             [['created_by'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['created_by' => 'id']],
             [['updated_by'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['updated_by' => 'id']],
 			[['status'], 'default', 'value' => self::STATUS_REQUESTED],
+
+            ['name', 'trim'],
+			['name', 'match', 'pattern' => '/^[a-zA-Z\s]+$/', 'message' => 'Name can only contain characters.'],
+			
+            ['email', 'trim'],
+            ['email', 'email'],
+            ['email', 'string', 'max' => 255],
+			
+            ['phone', 'trim'],
+            ['phone', 'string', 'max' => 10],
+            ['phone', 'number'],
+            ['phone', 'filter', 'filter' => function ($value) {
+				if(in_array(substr($value, 0, 1), [0,7,8,9])){
+					return true;
+				}else{
+                    $this->addError('phone', 'Phone number should start with 0,7,8 or 9.');
+					return false;
+				}
+			}, 'message' => 'Phone number should start with 0,7,8 or 9.'],
         ];
     }
 	
