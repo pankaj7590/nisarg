@@ -461,7 +461,7 @@ $email = $homeOptions['email']['value'];
 ', View::POS_READY,'init-rev-slider');
 ?>
 <?php
-	$this->registerJsFile('http://maps.google.com/maps/api/js?sensor=false&ver=5.9');
+	$this->registerJsFile('http://maps.google.com/maps/api/js?sensor=false&ver=5.9&key=AIzaSyAmSLGvnJ3bJihfVrzB83w_yNInVThix1Q');
 	$this->registerJs('
         function google_maps_566008f9ece90() {
             var latlng = new google.maps.LatLng('.$map_address.');
