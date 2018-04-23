@@ -199,7 +199,7 @@ $this->params['subheader'] = '<div id="Subheader" style="padding:190px 0 100px;"
                             </div>
                         </div>
 <?php
-	$this->registerJsFile('http://maps.google.com/maps/api/js?sensor=false&ver=5.9');
+	$this->registerJsFile('http://maps.google.com/maps/api/js?sensor=false&ver=5.9&key=AIzaSyAmSLGvnJ3bJihfVrzB83w_yNInVThix1Q');
 	$this->registerJs('
         function google_maps_566008f9ece90() {
             var latlng = new google.maps.LatLng(-33.8710, 151.2039);
