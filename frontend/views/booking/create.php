@@ -1,6 +1,7 @@
 <?php
 use yii\web\View;
 use yii\widgets\ActiveForm;
+use common\models\Setting;
 
 $user = Yii::$app->user;
 $urlManager = Yii::$app->urlManager;
@@ -14,6 +15,16 @@ $this->params['subheader'] = '<div id="Subheader" style="padding:190px 0 100px;"
                     </div>
                 </div>
             </div>';
+		
+//HOME PAGE OPTIONS
+$homeOptionModels = Setting::find()->where(['setting_group' => Setting::GROUP_HOME])->all();
+$homeOptions = [];
+foreach($homeOptionModels as $themeOptionModel){
+	$homeOptions[$themeOptionModel->name] = $themeOptionModel;
+}
+$address = $homeOptions['address']['value'];
+$phone = $homeOptions['phone']['value'];
+$email = $homeOptions['email']['value'];	
 ?>
                         <div class="section mcb-section full-width sections_style_0">
                             <div class="section_wrapper mcb-section-inner">
@@ -38,13 +49,8 @@ $this->params['subheader'] = '<div id="Subheader" style="padding:190px 0 100px;"
                                     <!-- One Full Row-->
                                     <div class="column mcb-column one column_column">
                                         <div class="column_attr align_right" style=" padding:10px 5% 0 0;">
-                                            <h2>BeHotel 2</h2>
-                                            <h4>Consectetur adipisicing elit sed do eiusmod
-												<br>
-												tempor incididunt ut labore dolore magna</h4>
-                                            <p class="big">
-                                                Ut nec mollis ipsum. Sed quis magna commodo, eleifend est interdum, tristique massa. Cras eget tempor massa, non euismod eros.
-                                            </p>
+                                            <h2>Honey Resort</h2>
+                                            <h4>Rediscover holidays!<br/>Rediscover Joy!!<br/>Rediscover Life!!!</h4>
                                         </div>
                                     </div>
                                 </div>
@@ -54,21 +60,17 @@ $this->params['subheader'] = '<div id="Subheader" style="padding:190px 0 100px;"
                                     <div class="column mcb-column one column_column">
                                         <div class="column_attr">
                                             <div style="border-left: 1px solid #c2c2c2; padding: 15px 0 5px 7%;">
-                                                <h4>Level 13, 2 Elizabeth St,
-													<br>
-													Melbourne, Victoria 3000
-													<br>
-													Australia</h4>
+                                                <h4><?= $address?></h4>
                                                 <hr class="no_line hrmargin_b_30" />
                                                 <p class="hrmargin_0 big">
                                                     Call us:
                                                 </p>
-                                                <h3 class="themecolor">+61 (0) 3 8376 6284</h3>
+                                                <h3 class="themecolor"><a href="tel:<?= $phone?>"><?= $phone?></a></h3>
                                                 <hr class="no_line hrmargin_b_30" />
                                                 <p class="hrmargin_0 big">
                                                     Email:
                                                 </p>
-                                                <h3 class="themecolor">noreply@envato.com</h3>
+                                                <h3 class="themecolor"><a href="mailto:<?= $email?>"><?= $email?></a></h3>
                                             </div>
                                         </div>
                                     </div>
